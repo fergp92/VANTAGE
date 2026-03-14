@@ -1,7 +1,7 @@
 # Agent 25: Innovation Scout Agent
 
 **Layer:** CAPA META — Intelligence & Market Analysis
-**Role:** Market Analyst / Product Intelligence
+**Role:** Analista de mercado IAM / Product Intelligence
 **TOGAF Phase:** Cross-cutting (feeds all phases)
 **Clean Architecture:** External intelligence input
 
@@ -13,7 +13,7 @@ Provide market-aware intelligence to all other agents by researching how Gartner
 
 ## Input
 - Problem or feature request from other agents
-- Current system context and constraints (your organization's ecosystem)
+- Current system context and constraints (project ecosystem)
 
 ## Process
 1. RESEARCH how the following leaders solve the given problem:
@@ -31,7 +31,7 @@ Provide market-aware intelligence to all other agents by researching how Gartner
    - Open standards being adopted (SCIM, FIDO2, Verifiable Credentials, etc.)
 
 3. ADAPT to context:
-   - Map leader patterns to your organization's specific needs
+   - Map leader patterns to the project's specific needs
    - Consider existing infrastructure and constraints
    - Evaluate build vs buy vs integrate decisions
    - Identify quick wins vs long-term strategic investments

@@ -442,6 +442,78 @@ Landing → Login → Dashboard → [Feature A] → [Feature B]
 
 ---
 
+## 6b. UI Component Specification (Markdown)
+
+```markdown
+# UI Component Specification
+
+> Reference: `Arch standard/ui-kit-standard.md` for standard toolkit and patterns.
+> All components follow the USDAF UI Kit: shadcn/ui + Magic UI + CVA + Tailwind + Framer Motion.
+
+## Theme Configuration
+
+### Brand Colors (HSL values — override in globals.css)
+| Token | HSL Value | Usage |
+|-------|-----------|-------|
+| --primary | [H S% L%] | Primary actions, links, focus rings |
+| --secondary | [H S% L%] | Secondary actions |
+| --accent | [H S% L%] | Highlights, badges |
+| --destructive | [H S% L%] | Errors, deletions |
+| --background | [H S% L%] | Page background |
+| --card | [H S% L%] | Card surfaces |
+
+### Typography Override (if different from default)
+| Token | Font | Fallback |
+|-------|------|----------|
+| font-display | [Font] | system-ui, sans-serif |
+| font-body | [Font] | system-ui, sans-serif |
+| font-mono | [Font] | monospace |
+
+## Component Inventory
+
+### Page: [Page Name]
+
+| Component | Base (UI Kit) | Variant | Animation | Notes |
+|-----------|--------------|---------|-----------|-------|
+| Header | — | custom | FadeIn direction="down" | App-level layout |
+| Hero Card | Card | glow | AnimatedContainer + AnimatedItem | Landing section |
+| Action Button | Button | glow / default | whileHover scale | Primary CTA |
+| Status Badge | Badge | glow / outline | — | Online indicator |
+| Feature Grid | Card | interactive | AnimatedContainer stagger | Feature selection |
+| Background | Particles | — | — | Hero section only |
+
+### Custom Components Needed (not in UI Kit)
+
+| Component | Description | Base Pattern | Priority |
+|-----------|-------------|-------------|----------|
+| [Name] | [What it does] | [Closest UI Kit component] | [high/medium/low] |
+
+## Interaction Patterns
+
+### [Pattern Name]
+- **Trigger**: [User action]
+- **Animation**: [FadeIn / ScaleIn / custom]
+- **Duration**: [ms]
+- **Feedback**: [Visual response]
+- **Accessibility**: [Keyboard equivalent, ARIA]
+
+## Responsive Layout
+
+| Breakpoint | Layout | Key Changes |
+|------------|--------|-------------|
+| Mobile (< 768px) | [Description] | [Stack, hide sidebar, etc.] |
+| Tablet (768-1023px) | [Description] | [Collapse, reflow, etc.] |
+| Desktop (1024px+) | [Description] | [Full layout] |
+
+## States Per Component
+
+| Component | Loading | Error | Empty | Populated |
+|-----------|---------|-------|-------|-----------|
+| [Name] | Skeleton / Shimmer | Error banner + retry | Empty state message | Normal render |
+```
+
+---
+
 ## 7. State Machines (Mermaid)
 
 ````markdown

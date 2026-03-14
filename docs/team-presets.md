@@ -31,9 +31,12 @@ These agents are **mandatory for every project**, regardless of preset:
 
 **Use when**: Building a web/mobile app with API backend, database, and frontend.
 
+**UI Kit**: When frontend is included, use `Arch standard/ui-kit-standard.md`. Init from `usdaf-ui-boilerplate/`.
+
 ```yaml
 preset: full-stack-app
 description: "Complete web/mobile application with API and frontend"
+ui_kit: usdaf-ui-boilerplate  # When agents 15/16 are active — shadcn/ui + Magic UI + Framer Motion + CVA
 
 mandatory:
   - 00-orchestrator
@@ -203,9 +206,12 @@ recommended:
 
 **Use when**: Building a SPA, mobile app, or UI-heavy application.
 
+**UI Kit**: MANDATORY — Init from `usdaf-ui-boilerplate/`, reference `Arch standard/ui-kit-standard.md`.
+
 ```yaml
 preset: frontend-app
 description: "Single-page application or mobile UI"
+ui_kit: usdaf-ui-boilerplate  # MANDATORY — shadcn/ui + Magic UI + Framer Motion + CVA
 
 mandatory:
   - 00-orchestrator
@@ -261,9 +267,12 @@ recommended:
 
 **Use when**: Designing new game features, modes, quest content, UX improvements, and creative direction. Sprint-based creative cycle with spec-driven handoff to implementation.
 
+**UI Kit**: MANDATORY — Init from `usdaf-ui-boilerplate/`, reference `Arch standard/ui-kit-standard.md`.
+
 ```yaml
 preset: creative-innovation
 description: "Game design, UX research, quest writing, and creative direction"
+ui_kit: usdaf-ui-boilerplate  # Agents 15/16 active — shadcn/ui + Magic UI + Framer Motion + CVA
 
 mandatory:
   - 00-orchestrator             # Coordinates creative sprints
@@ -292,6 +301,75 @@ recommended:
 4. **Design** (Day 9-11): Frontend Architect (15) + UI Builder (16) create wireframes, interaction patterns
 5. **Review** (Day 12-14): Documentation (23) writes game design docs → **Human approver** gives final go/no-go
 6. **Handoff**: Approved specs move to the Full Stack team backlog for implementation
+
+---
+
+## Preset: Startup (Full Lifecycle) — SUSDAF
+
+**Use when**: Creating a tech startup from scratch — from ideation and market validation through legal formation, fundraising, and product development. Activates all three parallel tracks (Business, Tech, Operations). This preset uses the **SUSDAF** (Startup Unified Spec-Driven Agile Framework) — see `Arch standard/SUSDAF.md`.
+
+**Tracks**: All three tracks active (A: Business Strategy, B: Tech, C: Operations). See `Arch standard/startup-tracks.md`.
+
+**UI Kit**: When frontend is included, use `Arch standard/ui-kit-standard.md`. Init from `usdaf-ui-boilerplate/`.
+
+```yaml
+preset: startup
+description: "Full tech startup creation: business strategy + product development + legal + finance + regulatory"
+tracks: [business, tech, operations]
+ui_kit: usdaf-ui-boilerplate  # When agents 15/16 are active
+
+mandatory:
+  # Core USDAF (always)
+  - 00-orchestrator
+  - 08-security-architect          # VETO POWER (technical)
+  - 27-spec-writer
+  - 28-backlog-manager
+  # Track A: Business Strategy
+  - 34-startup-strategist
+  - 35-market-researcher            # VETO at SG-1 (ZERO COMPLACENCY)
+  # Track C: Legal
+  - 38-legal-counsel                # VETO POWER (legal matters)
+  - 39-privacy-data-officer
+  - 41-contract-architect
+  # Track C: Finance & Regulatory
+  - 42-cfo-agent
+  - 45-regulatory-navigator
+  - 47-entity-formation
+
+recommended:
+  # Track A extras
+  - 36-growth-hacker             # If go-to-market planning needed
+  - 37-pitch-architect            # If fundraising planned
+  # Track B (tech — add as needed based on product scope)
+  - 01-architecture-board
+  - 02-requirements-architect
+  - 04-enterprise-architect
+  - 05-data-architect             # If complex data model
+  - 06-integration-architect
+  - 12-domain-logic
+  - 13-app-services
+  - 14-adapters
+  - 15-frontend-architect
+  - 16-ui-builder
+  - 17-test-architect
+  - 18-test-implementation
+  - 19-code-review
+  - 21-cicd
+  - 23-documentation
+  - 26-product-owner
+  - 32-ux-researcher              # If user-facing product
+  # Track C extras
+  - 40-ip-strategist              # If patents/trademarks planned
+  - 43-tax-strategist             # If multi-jurisdiction or tax optimization needed
+  - 44-accountant                 # If operational accounting needed
+  - 46-permit-license             # If industry-specific permits required
+```
+
+**Startup Sprint Cycle** (parallel across tracks):
+1. **Track A Sprint** (weeks 1-2): Startup Strategist (34) + Market Researcher (35) → Lean Canvas, market validation, MARKET VERDICT
+2. **Track C Sprint** (weeks 1-4): Regulatory Navigator (45) + Entity Formation (47) → Country roadmap, entity selection, formation
+3. **Track B Sprint** (after SG-2): Standard USDAF sprint cycle for product development
+4. **Cross-Track Sync**: Orchestrator (00) coordinates sync gates SG-1 through SG-4
 
 ---
 

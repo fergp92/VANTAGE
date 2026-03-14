@@ -135,6 +135,7 @@ USDAF merges the Multi-Agent Framework (25 agents, 7 phases, security gates) wit
 | Database Schema | SQL + ERD (Mermaid) | `specs/db-schema.sql`, `specs/erd.md` |
 | Domain Model | Mermaid class diagram | `specs/domain-model.md` |
 | UI Wireframes | Markdown + Mermaid | `specs/wireframes.md` |
+| UI Component Spec | Markdown | `specs/ui-components.md` |
 | State Machines | Mermaid stateDiagram | `specs/state-machines.md` |
 | Environment Config | YAML template | `specs/env-template.yaml` |
 | Test Plan | Markdown | `specs/test-plan.md` |
@@ -419,3 +420,4 @@ Assess current state, initialize backlog, and generate specs for what exists.
 | Security Veto | Preserved exactly as-is |
 | Clean Architecture | Preserved exactly as-is |
 | Certification Map | Extended with certs for agents 26-33 |
+| (new) UI Kit Standard | `Arch standard/ui-kit-standard.md` — Standard frontend toolkit (shadcn/ui + Magic UI + Framer Motion + CVA + Tailwind) |
