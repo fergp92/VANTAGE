@@ -2,7 +2,7 @@
 
 ## CAPA: 1 (Architecture & Specifications)
 ## Role: Technical Specification Author
-## Framework: USDAF (Unified Spec-Driven Agile Framework)
+## Framework: VANTAGE (Unified Spec-Driven Agile Framework)
 
 ---
 

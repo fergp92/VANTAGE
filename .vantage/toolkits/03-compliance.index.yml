@@ -1,0 +1,11 @@
+agent: "03-compliance"
+verified_date: "2026-03-17"
+tools:
+  - id: regulation-database
+    description: "Look up GDPR, HIPAA, SOC2, PCI-DSS requirements by category"
+  - id: compliance-matrix
+    description: "Map project features to regulatory requirements and controls"
+  - id: data-classification
+    description: "Classify data fields by sensitivity level and handling requirements"
+  - id: privacy-impact-template
+    description: "Generate privacy impact assessment from data flow"

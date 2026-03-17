@@ -1,12 +1,16 @@
-# USDAF — Unified Spec-Driven Agile Framework
+<p align="center">
+  <img src="docs/banner.svg" alt="VANTAGE — Verified Agent Network for Trusted, Governed Engineering" width="100%"/>
+</p>
+
+# VANTAGE — Verified Agent Network for Trusted, Governed Engineering
 
 A multi-agent development framework that enforces **spec-first development**, **security-by-design**, and **professional-grade architecture** across any software project.
 
-34 specialized AI agents. 8 development phases. Security veto power built in. **Intelligent runtime included.**
+34 specialized AI agents. 8 development phases. 4 ceremony levels. Security veto power built in. **Intelligent runtime included.**
 
-## What is USDAF?
+## What is VANTAGE?
 
-USDAF is a framework for orchestrating AI agents (Claude, GPT, or any LLM) through a structured software development lifecycle. Instead of letting AI write code freehand, USDAF enforces:
+VANTAGE is a framework for orchestrating AI agents (Claude, GPT, or any LLM) through a structured software development lifecycle. Instead of letting AI write code freehand, VANTAGE enforces:
 
 - **Specs before code** — OpenAPI, DB schemas, and wireframes are written and approved before any implementation begins
 - **Security veto** — The Security Architect agent (Agent 08) can block any decision at any phase
@@ -16,32 +20,38 @@ USDAF is a framework for orchestrating AI agents (Claude, GPT, or any LLM) throu
 
 ## v2.0 Runtime — "Idea to MVP"
 
-USDAF v2.0 adds an intelligent runtime that makes the framework dramatically more efficient:
+VANTAGE v2.0 adds an intelligent runtime that makes the framework dramatically more efficient:
 
 | Module | What it does |
 |--------|-------------|
 | **Agent Memory** | Persistent learnings across sessions. Errors, decisions, and discoveries graduate from session to long-term memory. Automatic compaction. |
-| **Two-Level Toolkits** | Lightweight index (~200 tokens) always loaded, full tool definitions (~500 tokens) loaded on-demand. 24 tools across 7 roles. |
+| **Two-Level Toolkits** | Lightweight index (~200 tokens) always loaded, full tool definitions (~500 tokens) loaded on-demand. 34 agent indices + 24 tool definitions. Stale tool detection via `verified_date`. |
 | **OSS Scout** | Evaluation cache for packages — star ratings, license filtering, vulnerability tracking. No re-evaluating across projects. |
-| **Token Estimator** | Cost estimation before starting: agents x phases x complexity, with cache discounts. |
-| **Subagent Dispatch** | Only 3 agents in main context (00, 08, 24). Everything else as subagents. ~75% token reduction. |
-| **Maintenance Agent** | Audits toolkit integrity, flags stale/vulnerable packages on configurable schedule. |
-| **Phase Skills** | 6 phase definitions (discovery → operations) with agent assignments, gate criteria, and token budgets. |
+| **Token Estimator + Cost Tracking** | Pre-project estimation + real-time cost tracking with per-agent, per-phase ledger and dashboard. |
+| **Subagent Dispatch** | Only 3 agents in main context (00, 08, 24). Everything else as subagents with fresh sessions. ~75% token reduction. |
+| **Prompt Caching** | Cache-annotated prompt blocks for 90% cost reduction on static content (agent prompts, toolkits). Supports Anthropic `cache_control` and OpenAI cached prompts. |
+| **Structured Output Schemas** | JSON Schema definitions for inter-agent handoff artifacts. Eliminates parsing failures and reduces verbose text. 7 phase schemas. |
+| **RAG Memory Retrieval** | TF-IDF keyword search over agent memory. Loads only relevant chunks instead of full files. 40-90% memory token reduction. |
+| **Maintenance Agent** | Audits toolkit integrity, flags stale tools via `verified_date`, vulnerable packages on configurable schedule. |
+| **Session Lock & Recovery** | Crash recovery with stale lock detection, forensic briefing, and auto-resume guidance. |
+| **Phase Skills** | 6 phase definitions with context strategy, wave execution, verification criteria, and reassessment steps. |
+| **Ceremony Levels** | Quick / Standard / Full / Enterprise — scale process to match task complexity. |
+| **Project State Dashboard** | Auto-generated `PROJECT-STATE.md` for rapid session orientation. |
 
 ### Quick Start (v2.0)
 
 ```bash
 # Initialize in any project
-npx usdaf init
+npx vantage init
 
 # Estimate token cost
-node .usdaf/runtime/token-estimator.js estimate --complexity medium
+node .vantage/runtime/token-estimator.js estimate --complexity medium
 
 # Check agent memory
-node .usdaf/runtime/memory-manager.js load 08-security-architect
+node .vantage/runtime/memory-manager.js load 08-security-architect
 
 # Run maintenance audit
-node .usdaf/runtime/maintenance.js audit
+node .vantage/runtime/maintenance.js audit
 ```
 
 ## Architecture
@@ -115,13 +125,14 @@ See [docs/team-presets.md](docs/team-presets.md) for full details.
 ```
 agents/              34 agent system prompts (NN-agent-name.md)
 docs/                Framework documentation and guides
-bin/                 CLI entry point (npx usdaf init)
-.usdaf/              v2.0 Runtime (created by npx usdaf init)
-├── runtime/         6 modules + 50 tests
-├── skills/          6 phase skill definitions
+bin/                 CLI entry point (npx vantage init)
+.vantage/            v2.0 Runtime (created by npx vantage init)
+├── runtime/         7 modules + 50+ tests
+├── skills/          6 phase skill definitions (with context strategy + wave execution)
 ├── toolkits/        7 agent indices + 24 tool definitions
-├── memory/          Persistent agent memory (auto-managed)
-└── config.yml       Project configuration
+├── locks/           Session lock files (crash recovery)
+├── memory/          Persistent agent memory + cost ledger (auto-managed)
+└── config.yml       Project configuration (ceremony levels, git strategy)
 ```
 
 ## Quick Start
@@ -131,9 +142,9 @@ bin/                 CLI entry point (npx usdaf init)
 ```bash
 # Initialize the runtime in your project
 cd your-project
-npx usdaf init
+npx vantage init
 
-# The init command creates .usdaf/, updates CLAUDE.md, and sets up .gitignore
+# The init command creates .vantage/, updates CLAUDE.md, and sets up .gitignore
 # Then start with Agent 00 (Orchestrator)
 ```
 
@@ -145,6 +156,15 @@ npx usdaf init
 4. Start with Phase 0 (Kickoff)
 
 For a step-by-step walkthrough, see [QUICKSTART.md](QUICKSTART.md).
+
+## Ceremony Levels
+
+| Level | Agents | Phases | Use Case |
+|-------|--------|--------|----------|
+| **Quick** | 1 (Orchestrator) | Implementation only | Bug fixes, config changes, one-file edits |
+| **Standard** | Core (00, 08, 27, 28) | Kickoff → Security (light) → Impl → QA | Features within existing architecture |
+| **Full** | Team preset | All 8 phases | New features, API/schema changes |
+| **Enterprise** | Custom team | All 8 + compliance | Regulated industries, SOC2/HIPAA/PCI |
 
 ## Key Principles
 
@@ -159,12 +179,13 @@ For a step-by-step walkthrough, see [QUICKSTART.md](QUICKSTART.md).
 
 | Document | Description |
 |----------|-------------|
-| [USDAF.md](docs/USDAF.md) | Master framework document |
+| [VANTAGE.md](docs/VANTAGE.md) | Master framework document |
 | [MASTER-INVOCATION-GUIDE.md](docs/MASTER-INVOCATION-GUIDE.md) | How to invoke the framework |
 | [agent-certification-map.md](docs/agent-certification-map.md) | Professional certifications per agent |
 | [team-presets.md](docs/team-presets.md) | Team configurations by project type |
 | [spec-templates.md](docs/spec-templates.md) | OpenAPI, DB schema, wireframe templates |
 | [backlog-guide.md](docs/backlog-guide.md) | Markdown-native backlog management |
+| [DECISIONS-TEMPLATE.md](docs/DECISIONS-TEMPLATE.md) | Architecture Decision Record format |
 | [QUICKSTART.md](QUICKSTART.md) | Getting started guide |
 
 ## License

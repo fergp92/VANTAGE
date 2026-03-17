@@ -1,0 +1,11 @@
+agent: "25-innovation-scout"
+verified_date: "2026-03-17"
+tools:
+  - id: npm-search
+    description: "Search npm registry for packages matching requirements"
+  - id: github-search
+    description: "Search GitHub repos for libraries and solutions"
+  - id: license-checker
+    description: "Verify package license compatibility with project requirements"
+  - id: package-evaluator
+    description: "Evaluate package health: downloads, maintenance, security, license"

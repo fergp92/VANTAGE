@@ -1,0 +1,11 @@
+agent: "04-enterprise-architect"
+verified_date: "2026-03-17"
+tools:
+  - id: c4-diagram-generator
+    description: "Generate C4 model diagrams at context, container, and component levels"
+  - id: bounded-context-mapper
+    description: "Map domain boundaries and context relationships for DDD"
+  - id: architecture-style-selector
+    description: "Evaluate and recommend architecture patterns for project needs"
+  - id: dependency-direction-validator
+    description: "Validate dependency direction follows inward-only rule"

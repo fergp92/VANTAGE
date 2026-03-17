@@ -1,0 +1,11 @@
+agent: "12-domain-logic"
+verified_date: "2026-03-17"
+tools:
+  - id: entity-template
+    description: "Scaffold domain entity with validation rules and value objects"
+  - id: use-case-scaffold
+    description: "Generate use case interactor with input/output boundaries"
+  - id: domain-event-template
+    description: "Create domain event definitions with payload contracts"
+  - id: aggregate-builder
+    description: "Build aggregate root with invariant enforcement"

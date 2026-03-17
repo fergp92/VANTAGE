@@ -1,0 +1,11 @@
+agent: "19-code-review"
+verified_date: "2026-03-17"
+tools:
+  - id: lint-config
+    description: "Generate and validate ESLint/Prettier configuration"
+  - id: review-checklist
+    description: "Structured code review checklist by category"
+  - id: complexity-analyzer
+    description: "Analyze cyclomatic complexity and suggest refactoring targets"
+  - id: naming-convention-checker
+    description: "Validate naming conventions across codebase layers"

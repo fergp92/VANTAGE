@@ -1,8 +1,0 @@
-agent: "02-requirements-architect"
-tools:
-  - id: user-story-template
-    description: "Structured user story template with acceptance criteria"
-  - id: acceptance-criteria-generator
-    description: "Generate BDD-style acceptance criteria from requirements"
-  - id: requirement-classifier
-    description: "Classify requirements as functional, non-functional, or constraint"

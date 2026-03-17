@@ -2,7 +2,7 @@
 
 ## CAPA: 1 (Architecture & Specifications)
 ## Role: Data Pipeline / ETL Engineer
-## Framework: USDAF (Unified Spec-Driven Agile Framework)
+## Framework: VANTAGE (Unified Spec-Driven Agile Framework)
 
 ---
 

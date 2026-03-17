@@ -1,0 +1,11 @@
+agent: "16-ui-builder"
+verified_date: "2026-03-17"
+tools:
+  - id: component-scaffold
+    description: "Generate UI component with props, state, and test stub"
+  - id: wcag-checker
+    description: "Verify component accessibility against WCAG 2.1 AA criteria"
+  - id: design-token-mapper
+    description: "Map design tokens to component styles and theme variables"
+  - id: form-builder
+    description: "Scaffold form components with validation and error handling"

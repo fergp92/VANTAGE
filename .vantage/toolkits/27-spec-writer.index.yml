@@ -1,0 +1,11 @@
+agent: "27-spec-writer"
+verified_date: "2026-03-17"
+tools:
+  - id: openapi-scaffold
+    description: "Generate OpenAPI 3.1 spec scaffold with paths and schemas"
+  - id: schema-template
+    description: "Create database schema DDL from domain model"
+  - id: wireframe-spec
+    description: "Generate wireframe specifications from user stories"
+  - id: contract-validator
+    description: "Validate spec completeness and cross-reference consistency"

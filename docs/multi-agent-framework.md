@@ -1,3 +1,5 @@
+> **DEPRECATED**: This document describes the original 24-agent v1.0 framework. For the current 34-agent system, see [VANTAGE.md](VANTAGE.md).
+
 # Multi-Agent System Framework for Secure Software Development
 
 ## Based on TOGAF ADM + Clean Architecture + Security-by-Design
@@ -1340,9 +1342,9 @@ Agent: Architecture Board (01) final approval
 
 ---
 
-## 8. USDAF Extension (v2.0)
+## 8. VANTAGE Extension (v2.0)
 
-This framework is extended by USDAF (Unified Spec-Driven Agile Framework) which adds:
+This framework is extended by VANTAGE (Unified Spec-Driven Agile Framework) which adds:
 
 - **8 new agents (26-33)**: Product Owner, Spec Writer, Backlog Manager, Release Manager, DevEx Engineer, Performance Engineer, UX Researcher, Data Engineer
 - **Phase 0 (Kickoff)**: Team selection and backlog initialization
@@ -1350,8 +1352,8 @@ This framework is extended by USDAF (Unified Spec-Driven Agile Framework) which 
 - **Sprint-based implementation**: Backlog-driven, kanban-tracked execution
 - **Team presets**: Project-specific agent team configuration
 
-See `Arch standard/USDAF.md` for the complete USDAF framework reference.
+See `Arch standard/VANTAGE.md` for the complete VANTAGE framework reference.
 
 ---
 
-*Framework v2.0 — Extended with USDAF (Unified Spec-Driven Agile Framework)*
+*Framework v2.0 — Extended with VANTAGE (Unified Spec-Driven Agile Framework)*

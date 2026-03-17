@@ -1,8 +1,0 @@
-agent: "06-integration-architect"
-tools:
-  - id: openapi-validator
-    description: "Validate OpenAPI spec completeness and consistency"
-  - id: api-contract-template
-    description: "REST API contract template with standard patterns"
-  - id: breaking-change-detector
-    description: "Detect breaking changes between API versions"

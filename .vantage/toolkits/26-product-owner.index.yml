@@ -1,0 +1,11 @@
+agent: "26-product-owner"
+verified_date: "2026-03-17"
+tools:
+  - id: story-template
+    description: "Generate user story with acceptance criteria and definition of done"
+  - id: priority-matrix
+    description: "Score and rank backlog items by value, effort, and risk"
+  - id: epic-breakdown
+    description: "Decompose epics into implementable user stories"
+  - id: stakeholder-map
+    description: "Map stakeholders to features and communication preferences"

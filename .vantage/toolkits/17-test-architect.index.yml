@@ -1,0 +1,9 @@
+agent: "17-test-architect"
+verified_date: "2026-03-17"
+tools:
+  - id: coverage-matrix
+    description: "Test coverage matrix mapping requirements to test cases"
+  - id: test-strategy-template
+    description: "Test strategy template with scope, tools, and risk assessment"
+  - id: e2e-scenario-generator
+    description: "Generate E2E test scenarios from user stories"

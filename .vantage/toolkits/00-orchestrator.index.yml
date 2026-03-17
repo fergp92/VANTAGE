@@ -1,0 +1,11 @@
+agent: "00-orchestrator"
+verified_date: "2026-03-17"
+tools:
+  - id: phase-dispatcher
+    description: "Dispatch agents to execute VANTAGE phases 0-7"
+  - id: ceremony-selector
+    description: "Select ceremony level based on task complexity"
+  - id: session-status
+    description: "Check active session state and agent dispatch history"
+  - id: gate-validator
+    description: "Validate phase gate criteria before advancing"

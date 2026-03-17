@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vantage.dev/schemas/requirements.schema.json",
+  "title": "Requirements Artifact",
+  "description": "Phase 1 (Discovery) output. Captures functional, non-functional, and compliance requirements that drive architecture and implementation.",
+  "type": "object",
+  "required": [
+    "functional_requirements",
+    "non_functional_requirements"
+  ],
+  "properties": {
+    "functional_requirements": {
+      "type": "array",
+      "description": "Business capabilities the system must provide.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "description", "priority", "acceptance_criteria"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^FR-\\d+$",
+            "description": "Unique identifier, e.g. 'FR-001'."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short name for the requirement."
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the requirement."
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["must", "should", "could", "wont"],
+            "description": "MoSCoW priority."
+          },
+          "acceptance_criteria": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "description": "Testable conditions that confirm the requirement is met."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "non_functional_requirements": {
+      "type": "array",
+      "description": "Quality attributes and system constraints.",
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "description", "metric", "target"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^NFR-\\d+$",
+            "description": "Unique identifier, e.g. 'NFR-001'."
+          },
+          "category": {
+            "type": "string",
+            "description": "Quality attribute category, e.g. 'performance', 'availability', 'scalability'."
+          },
+          "description": {
+            "type": "string",
+            "description": "What this NFR requires."
+          },
+          "metric": {
+            "type": "string",
+            "description": "How this NFR is measured, e.g. 'p99 latency'."
+          },
+          "target": {
+            "type": "string",
+            "description": "Target value, e.g. '< 200ms', '99.9% uptime'."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "compliance_requirements": {
+      "type": "array",
+      "description": "Regulatory and compliance obligations.",
+      "items": {
+        "type": "object",
+        "required": ["id", "regulation", "requirement", "controls"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^CR-\\d+$",
+            "description": "Unique identifier, e.g. 'CR-001'."
+          },
+          "regulation": {
+            "type": "string",
+            "description": "Regulatory framework, e.g. 'GDPR', 'SOC2', 'HIPAA'."
+          },
+          "requirement": {
+            "type": "string",
+            "description": "Specific regulatory requirement."
+          },
+          "controls": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Controls that satisfy this requirement."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Technical or business constraints that limit solution space, e.g. 'Must run on AWS', 'Budget < $500/mo'."
+    }
+  },
+  "additionalProperties": false
+}

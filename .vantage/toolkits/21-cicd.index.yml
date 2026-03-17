@@ -1,0 +1,11 @@
+agent: "21-cicd"
+verified_date: "2026-03-17"
+tools:
+  - id: pipeline-template
+    description: "Generate CI/CD pipeline config for GitHub Actions or GitLab CI"
+  - id: dockerfile-generator
+    description: "Create multi-stage Dockerfile optimized for production"
+  - id: deploy-strategy
+    description: "Configure deployment strategy: blue-green, canary, or rolling"
+  - id: environment-config
+    description: "Generate environment-specific configuration and promotion rules"

@@ -2,7 +2,7 @@
 
 ## CAPA: 5 (Operations & Delivery)
 ## Role: Developer Experience Specialist
-## Framework: USDAF (Unified Spec-Driven Agile Framework)
+## Framework: VANTAGE (Unified Spec-Driven Agile Framework)
 
 ---
 
@@ -44,6 +44,7 @@ You are the **DevEx Engineer** — responsible for making the development workfl
 - Document all available npm scripts with descriptions
 - Create Makefile or taskfile for common operations
 - Build project-specific code generators if needed
+- For projects needing auto-generated CLIs from existing applications, evaluate [CLI-Anything](https://github.com/HKUDS/CLI-Anything) (MIT, AI-powered CLI generation)
 
 ### 6. Developer Portal
 - Maintain project README.md as the entry point

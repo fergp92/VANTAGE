@@ -1,8 +1,0 @@
-agent: "15-frontend-architect"
-tools:
-  - id: component-inventory
-    description: "Inventory of UI components with props, variants, and dependencies"
-  - id: accessibility-checklist
-    description: "WCAG 2.1 AA compliance checklist for components"
-  - id: bundle-analyzer
-    description: "Analyze bundle size impact of new dependencies"

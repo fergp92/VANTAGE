@@ -1,0 +1,233 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vantage.dev/schemas/operations.schema.json",
+  "title": "Operations Artifact",
+  "description": "Phase 6 (Operations) output. Defines CI/CD pipeline, container configuration, observability stack, and documentation deliverables.",
+  "type": "object",
+  "required": [
+    "pipeline",
+    "observability",
+    "documentation"
+  ],
+  "properties": {
+    "pipeline": {
+      "type": "object",
+      "description": "CI/CD pipeline definition.",
+      "required": ["stages", "triggers", "environments"],
+      "properties": {
+        "stages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "steps"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Stage name, e.g. 'build', 'test', 'deploy'."
+              },
+              "steps": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Commands or actions in this stage."
+              },
+              "timeout_minutes": {
+                "type": "integer",
+                "description": "Stage timeout."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["event"],
+            "properties": {
+              "event": {
+                "type": "string",
+                "description": "Trigger event, e.g. 'push', 'pull_request', 'schedule'."
+              },
+              "branches": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Branch filters."
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": "What triggers the pipeline."
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "deploy_strategy"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Target environment, e.g. 'staging', 'production'."
+              },
+              "deploy_strategy": {
+                "type": "string",
+                "enum": ["rolling", "blue_green", "canary", "recreate"],
+                "description": "Deployment strategy."
+              },
+              "approval_required": {
+                "type": "boolean",
+                "description": "Whether manual approval is needed."
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": "Deployment environments."
+        }
+      },
+      "additionalProperties": false
+    },
+    "docker": {
+      "type": "object",
+      "description": "Container configuration.",
+      "required": ["base_image", "multi_stage"],
+      "properties": {
+        "base_image": {
+          "type": "string",
+          "description": "Base Docker image, e.g. 'node:20-alpine'."
+        },
+        "multi_stage": {
+          "type": "boolean",
+          "description": "Whether multi-stage build is used."
+        },
+        "size_mb": {
+          "type": "number",
+          "description": "Estimated final image size in megabytes."
+        }
+      },
+      "additionalProperties": false
+    },
+    "observability": {
+      "type": "object",
+      "description": "Monitoring, logging, and alerting configuration.",
+      "required": ["logging_config", "metrics", "alerts", "dashboards"],
+      "properties": {
+        "logging_config": {
+          "type": "object",
+          "description": "Logging configuration.",
+          "properties": {
+            "format": {
+              "type": "string",
+              "description": "Log format, e.g. 'json', 'structured'."
+            },
+            "level": {
+              "type": "string",
+              "enum": ["debug", "info", "warn", "error"],
+              "description": "Default log level."
+            },
+            "destination": {
+              "type": "string",
+              "description": "Where logs are shipped, e.g. 'CloudWatch', 'Datadog'."
+            }
+          },
+          "additionalProperties": false
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+              "name": { "type": "string", "description": "Metric name." },
+              "type": {
+                "type": "string",
+                "enum": ["counter", "gauge", "histogram", "summary"],
+                "description": "Prometheus metric type."
+              },
+              "description": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          "description": "Application metrics to expose."
+        },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "condition", "severity"],
+            "properties": {
+              "name": { "type": "string" },
+              "condition": { "type": "string", "description": "Alert condition expression." },
+              "severity": {
+                "type": "string",
+                "enum": ["critical", "warning", "info"]
+              },
+              "channel": { "type": "string", "description": "Notification channel, e.g. 'pagerduty', 'slack'." }
+            },
+            "additionalProperties": false
+          },
+          "description": "Alert definitions."
+        },
+        "dashboards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "panels"],
+            "properties": {
+              "name": { "type": "string" },
+              "panels": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Dashboard panel names/descriptions."
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": "Monitoring dashboards."
+        }
+      },
+      "additionalProperties": false
+    },
+    "documentation": {
+      "type": "object",
+      "description": "Documentation deliverables.",
+      "required": ["readme", "api_docs", "runbooks", "security_docs"],
+      "properties": {
+        "readme": {
+          "type": "string",
+          "description": "Path to the project README."
+        },
+        "api_docs": {
+          "type": "string",
+          "description": "Path or URL to API documentation."
+        },
+        "runbooks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "path"],
+            "properties": {
+              "name": { "type": "string" },
+              "path": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          "description": "Operational runbook files."
+        },
+        "security_docs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "path"],
+            "properties": {
+              "name": { "type": "string" },
+              "path": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          "description": "Security documentation files."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

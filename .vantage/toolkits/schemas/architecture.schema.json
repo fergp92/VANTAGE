@@ -1,0 +1,285 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vantage.dev/schemas/architecture.schema.json",
+  "title": "Architecture Artifact",
+  "description": "Phase 2 (Architecture) output. Defines system structure, domain model, API contracts, data classification, and infrastructure topology.",
+  "type": "object",
+  "required": [
+    "system_context",
+    "containers",
+    "domain_model"
+  ],
+  "properties": {
+    "system_context": {
+      "type": "object",
+      "description": "C4 Level 1 — system context showing actors and external dependencies.",
+      "required": ["name", "description", "actors", "external_systems"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "System name."
+        },
+        "description": {
+          "type": "string",
+          "description": "One-paragraph system description."
+        },
+        "actors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "role"],
+            "properties": {
+              "name": { "type": "string" },
+              "role": { "type": "string", "description": "What this actor does with the system." }
+            },
+            "additionalProperties": false
+          },
+          "description": "People or systems that interact with this system."
+        },
+        "external_systems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "purpose"],
+            "properties": {
+              "name": { "type": "string" },
+              "purpose": { "type": "string" },
+              "protocol": { "type": "string", "description": "Integration protocol, e.g. 'REST', 'gRPC', 'AMQP'." }
+            },
+            "additionalProperties": false
+          },
+          "description": "External systems this system depends on or integrates with."
+        }
+      },
+      "additionalProperties": false
+    },
+    "containers": {
+      "type": "array",
+      "description": "C4 Level 2 — deployable units (services, databases, queues, etc.).",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "technology", "responsibility"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique container identifier."
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable container name."
+          },
+          "technology": {
+            "type": "string",
+            "description": "Primary technology, e.g. 'Node.js 20', 'PostgreSQL 16'."
+          },
+          "responsibility": {
+            "type": "string",
+            "description": "What this container is responsible for."
+          },
+          "ports": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["number", "protocol"],
+              "properties": {
+                "number": { "type": "integer" },
+                "protocol": { "type": "string", "enum": ["tcp", "udp", "http", "https", "grpc"] }
+              },
+              "additionalProperties": false
+            },
+            "description": "Exposed network ports."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "domain_model": {
+      "type": "object",
+      "description": "Domain-Driven Design model following Clean Architecture principles.",
+      "required": ["bounded_contexts", "entities", "value_objects", "aggregates"],
+      "properties": {
+        "bounded_contexts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "responsibility"],
+            "properties": {
+              "name": { "type": "string" },
+              "responsibility": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "context", "properties"],
+            "properties": {
+              "name": { "type": "string" },
+              "context": { "type": "string", "description": "Bounded context this entity belongs to." },
+              "properties": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "type"],
+                  "properties": {
+                    "name": { "type": "string" },
+                    "type": { "type": "string" },
+                    "required": { "type": "boolean" }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "value_objects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "properties"],
+            "properties": {
+              "name": { "type": "string" },
+              "properties": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "type"],
+                  "properties": {
+                    "name": { "type": "string" },
+                    "type": { "type": "string" }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "aggregates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["root", "entities"],
+            "properties": {
+              "root": { "type": "string", "description": "Aggregate root entity name." },
+              "entities": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Entity names within this aggregate boundary."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "data_classification": {
+      "type": "array",
+      "description": "Data sensitivity classification for security review.",
+      "items": {
+        "type": "object",
+        "required": ["field", "classification"],
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Data field or category name."
+          },
+          "classification": {
+            "type": "string",
+            "enum": ["public", "internal", "confidential", "restricted"],
+            "description": "Sensitivity level."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "api_contracts": {
+      "type": "array",
+      "description": "API endpoint contracts (lightweight OpenAPI-compatible summaries).",
+      "items": {
+        "type": "object",
+        "required": ["path", "method", "summary"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "API path, e.g. '/api/v1/users'."
+          },
+          "method": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"],
+            "description": "HTTP method."
+          },
+          "summary": {
+            "type": "string",
+            "description": "What this endpoint does."
+          },
+          "request_schema": {
+            "type": "object",
+            "description": "JSON Schema for the request body."
+          },
+          "response_schema": {
+            "type": "object",
+            "description": "JSON Schema for the response body."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "infrastructure": {
+      "type": "object",
+      "description": "Infrastructure topology and resource requirements.",
+      "properties": {
+        "compute": {
+          "type": "object",
+          "description": "Compute resource specifications.",
+          "properties": {
+            "type": { "type": "string", "description": "e.g. 'kubernetes', 'serverless', 'vm'." },
+            "cpu": { "type": "string" },
+            "memory": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
+        "storage": {
+          "type": "object",
+          "description": "Storage specifications.",
+          "properties": {
+            "primary_db": { "type": "string" },
+            "cache": { "type": "string" },
+            "object_store": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
+        "networking": {
+          "type": "object",
+          "description": "Networking topology.",
+          "properties": {
+            "vpc": { "type": "string" },
+            "load_balancer": { "type": "string" },
+            "cdn": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string", "description": "e.g. 'dev', 'staging', 'production'." },
+              "region": { "type": "string" },
+              "replicas": { "type": "integer" }
+            },
+            "additionalProperties": false
+          },
+          "description": "Deployment environments."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

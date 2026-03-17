@@ -1,0 +1,174 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vantage.dev/schemas/qa-report.schema.json",
+  "title": "QA Report Artifact",
+  "description": "Phase 5 (QA) output. Contains test coverage metrics, findings from static analysis and code review, SAST results, and overall pass/fail status.",
+  "type": "object",
+  "required": [
+    "test_coverage",
+    "findings",
+    "code_review",
+    "sast_results",
+    "passed"
+  ],
+  "properties": {
+    "test_coverage": {
+      "type": "object",
+      "description": "Test coverage percentages by category.",
+      "required": ["unit_pct", "integration_pct", "e2e_pct", "security_pct"],
+      "properties": {
+        "unit_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Unit test line coverage percentage."
+        },
+        "integration_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Integration test coverage percentage."
+        },
+        "e2e_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "End-to-end test coverage percentage."
+        },
+        "security_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Security test coverage percentage (auth flows, input validation, etc.)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "findings": {
+      "type": "array",
+      "description": "Issues found during QA — bugs, code smells, security issues, etc.",
+      "items": {
+        "type": "object",
+        "required": ["id", "severity", "category", "description", "file", "remediation", "status"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^QA-\\d+$",
+            "description": "Unique finding identifier."
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low", "info"],
+            "description": "Severity level."
+          },
+          "category": {
+            "type": "string",
+            "description": "Finding category, e.g. 'bug', 'security', 'performance', 'code-smell', 'accessibility'."
+          },
+          "description": {
+            "type": "string",
+            "description": "What was found."
+          },
+          "file": {
+            "type": "string",
+            "description": "File where the issue was found."
+          },
+          "line": {
+            "type": "integer",
+            "description": "Line number (if applicable)."
+          },
+          "remediation": {
+            "type": "string",
+            "description": "Recommended fix."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["open", "resolved"],
+            "description": "Whether this finding has been addressed."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "code_review": {
+      "type": "object",
+      "description": "Code review summary from the reviewing agent.",
+      "required": ["approved", "reviewer_agent", "comments"],
+      "properties": {
+        "approved": {
+          "type": "boolean",
+          "description": "Whether the code review passed."
+        },
+        "reviewer_agent": {
+          "type": "string",
+          "description": "Agent that performed the review, e.g. '19-code-reviewer'."
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["file", "comment"],
+            "properties": {
+              "file": { "type": "string" },
+              "line": { "type": "integer" },
+              "comment": { "type": "string" },
+              "severity": {
+                "type": "string",
+                "enum": ["blocker", "suggestion", "nitpick"]
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": "Review comments on specific files."
+        }
+      },
+      "additionalProperties": false
+    },
+    "sast_results": {
+      "type": "object",
+      "description": "Static Application Security Testing results.",
+      "required": ["vulnerabilities", "owasp_top10_status"],
+      "properties": {
+        "vulnerabilities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["cwe", "severity", "description", "file"],
+            "properties": {
+              "cwe": {
+                "type": "string",
+                "description": "CWE identifier, e.g. 'CWE-79'."
+              },
+              "severity": {
+                "type": "string",
+                "enum": ["critical", "high", "medium", "low"]
+              },
+              "description": { "type": "string" },
+              "file": { "type": "string" },
+              "line": { "type": "integer" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "owasp_top10_status": {
+          "type": "object",
+          "description": "Pass/fail status for each OWASP Top 10 category.",
+          "patternProperties": {
+            "^A\\d{2}": {
+              "type": "string",
+              "enum": ["pass", "fail", "not_applicable"],
+              "description": "Status for this OWASP category."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "passed": {
+      "type": "boolean",
+      "description": "Overall QA pass/fail. If false, implementation must be revised before proceeding to operations."
+    }
+  },
+  "additionalProperties": false
+}

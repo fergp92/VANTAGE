@@ -1,0 +1,11 @@
+agent: "30-devex-engineer"
+verified_date: "2026-03-17"
+tools:
+  - id: setup-scaffold
+    description: "Generate local dev setup scripts, docker-compose, and .env.example"
+  - id: onboarding-generator
+    description: "Create CONTRIBUTING.md and onboarding guide from project structure"
+  - id: cli-generator
+    description: "Evaluate and configure CLI generation tools (CLI-Anything) for project needs"
+  - id: seed-data-builder
+    description: "Generate realistic seed data and test fixtures from DB schema"

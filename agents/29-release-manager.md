@@ -2,7 +2,7 @@
 
 ## CAPA: 5 (Operations & Delivery)
 ## Role: Release Engineer
-## Framework: USDAF (Unified Spec-Driven Agile Framework)
+## Framework: VANTAGE (Unified Spec-Driven Agile Framework)
 
 ---
 

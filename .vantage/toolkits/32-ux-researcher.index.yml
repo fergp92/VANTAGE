@@ -1,0 +1,11 @@
+agent: "32-ux-researcher"
+verified_date: "2026-03-17"
+tools:
+  - id: persona-template
+    description: "Create user persona profiles with goals, pain points, and behaviors"
+  - id: journey-mapper
+    description: "Map user journey with touchpoints, emotions, and opportunities"
+  - id: usability-heuristics
+    description: "Evaluate interface against Nielsen's 10 usability heuristics"
+  - id: interview-script
+    description: "Generate user interview scripts for discovery research"

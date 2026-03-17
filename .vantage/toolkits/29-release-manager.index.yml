@@ -1,0 +1,11 @@
+agent: "29-release-manager"
+verified_date: "2026-03-17"
+tools:
+  - id: changelog-generator
+    description: "Generate changelog from conventional commits between versions"
+  - id: version-bumper
+    description: "Calculate next semver version from commit history"
+  - id: release-checklist
+    description: "Pre-release validation checklist with rollback procedures"
+  - id: tag-manager
+    description: "Create and manage git tags with release metadata"

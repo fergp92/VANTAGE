@@ -1,8 +1,0 @@
-agent: "05-data-architect"
-tools:
-  - id: erd-generator
-    description: "Generate Entity-Relationship Diagram from domain model"
-  - id: migration-template
-    description: "Database migration template with up/down scripts"
-  - id: schema-validator
-    description: "Validate database schema against naming conventions and normalization"
