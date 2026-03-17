@@ -1,4 +1,5 @@
 agent: "30-devex-engineer"
+verified_date: "2026-03-17"
 tools:
   - id: setup-scaffold
     description: "Generate local dev setup scripts, docker-compose, and .env.example"

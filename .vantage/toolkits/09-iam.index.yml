@@ -1,0 +1,11 @@
+agent: "09-iam"
+verified_date: "2026-03-17"
+tools:
+  - id: auth-flow-template
+    description: "Generate OAuth2/OIDC authentication flow configurations"
+  - id: rbac-matrix
+    description: "Build role-based access control matrix from requirements"
+  - id: permission-policy-generator
+    description: "Generate fine-grained permission policies for resources"
+  - id: session-management-config
+    description: "Configure session handling, token rotation, and expiry policies"

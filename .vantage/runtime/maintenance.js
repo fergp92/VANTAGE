@@ -50,11 +50,38 @@ export function audit() {
     }
   }
 
-  // Check toolkit files exist
+  // Check toolkit files exist and flag stale tools
   if (fs.existsSync(TOOLKITS_DIR)) {
     const indexFiles = fs.readdirSync(TOOLKITS_DIR).filter(f => f.endsWith('.index.yml'));
     for (const indexFile of indexFiles) {
       const content = fs.readFileSync(path.join(TOOLKITS_DIR, indexFile), 'utf-8');
+
+      // Check for stale verified_date
+      const dateMatch = content.match(/verified_date:\s*["']?(\d{4}-\d{2}-\d{2})["']?/);
+      if (dateMatch) {
+        const verifiedDate = new Date(dateMatch[1]);
+        const daysSinceVerified = Math.floor((new Date() - verifiedDate) / (1000 * 60 * 60 * 24));
+        if (daysSinceVerified > staleThresholdDays) {
+          const agentMatch = indexFile.match(/^(\d{2}-.+)\.index\.yml$/);
+          const agentName = agentMatch ? agentMatch[1] : indexFile;
+          actionRequired.push({
+            package: `toolkit:${agentName}`,
+            issue: `Toolkit verified ${daysSinceVerified} days ago (${dateMatch[1]}), needs review`,
+            severity: 'MEDIUM',
+            recommendation: 'Re-evaluate tools: check for newer alternatives, deprecated tools, or security issues',
+          });
+        }
+      } else {
+        // No verified_date — flag as needing one
+        actionRequired.push({
+          package: `toolkit:${indexFile}`,
+          issue: 'Missing verified_date field',
+          severity: 'LOW',
+          recommendation: 'Add verified_date to track toolkit freshness',
+        });
+      }
+
+      // Check tool definition files exist
       const toolMatches = content.match(/id:\s*(.+)/g) || [];
       for (const match of toolMatches) {
         const toolId = match.replace('id:', '').trim();

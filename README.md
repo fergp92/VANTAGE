@@ -25,11 +25,14 @@ VANTAGE v2.0 adds an intelligent runtime that makes the framework dramatically m
 | Module | What it does |
 |--------|-------------|
 | **Agent Memory** | Persistent learnings across sessions. Errors, decisions, and discoveries graduate from session to long-term memory. Automatic compaction. |
-| **Two-Level Toolkits** | Lightweight index (~200 tokens) always loaded, full tool definitions (~500 tokens) loaded on-demand. 24 tools across 7 roles. |
+| **Two-Level Toolkits** | Lightweight index (~200 tokens) always loaded, full tool definitions (~500 tokens) loaded on-demand. 34 agent indices + 24 tool definitions. Stale tool detection via `verified_date`. |
 | **OSS Scout** | Evaluation cache for packages — star ratings, license filtering, vulnerability tracking. No re-evaluating across projects. |
 | **Token Estimator + Cost Tracking** | Pre-project estimation + real-time cost tracking with per-agent, per-phase ledger and dashboard. |
 | **Subagent Dispatch** | Only 3 agents in main context (00, 08, 24). Everything else as subagents with fresh sessions. ~75% token reduction. |
-| **Maintenance Agent** | Audits toolkit integrity, flags stale/vulnerable packages on configurable schedule. |
+| **Prompt Caching** | Cache-annotated prompt blocks for 90% cost reduction on static content (agent prompts, toolkits). Supports Anthropic `cache_control` and OpenAI cached prompts. |
+| **Structured Output Schemas** | JSON Schema definitions for inter-agent handoff artifacts. Eliminates parsing failures and reduces verbose text. 7 phase schemas. |
+| **RAG Memory Retrieval** | TF-IDF keyword search over agent memory. Loads only relevant chunks instead of full files. 40-90% memory token reduction. |
+| **Maintenance Agent** | Audits toolkit integrity, flags stale tools via `verified_date`, vulnerable packages on configurable schedule. |
 | **Session Lock & Recovery** | Crash recovery with stale lock detection, forensic briefing, and auto-resume guidance. |
 | **Phase Skills** | 6 phase definitions with context strategy, wave execution, verification criteria, and reassessment steps. |
 | **Ceremony Levels** | Quick / Standard / Full / Enterprise — scale process to match task complexity. |

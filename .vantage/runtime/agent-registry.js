@@ -9,6 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const AGENTS_DIR = path.resolve(__dirname, '..', '..', 'agents');
 const PRESETS_FILE = path.resolve(__dirname, '..', '..', 'Arch standard', 'team-presets.md');
 
+const SCHEMAS_DIR = path.resolve(__dirname, '..', 'toolkits', 'schemas');
 const MAIN_AGENTS = ['00', '08', '24'];
 const CORE_TEAM = ['00', '08', '24', '27', '28'];
 
@@ -110,30 +111,100 @@ function extractMandatoryIds(yamlBlock) {
 /**
  * Assemble a complete prompt for dispatch.
  *
+ * Returns either a plain string (format='string') or an array of
+ * cache-annotated content blocks (format='messages') for use with
+ * prompt caching APIs (Anthropic cache_control, OpenAI cached prompts).
+ *
  * @param {string} agentId
  * @param {string} task
- * @param {object} context  Optional: { projectStack, specs }
+ * @param {object} context  Optional: { projectStack, specs, outputSchema }
  * @param {object} projectConfig  Optional: { memory: { injection_budget } }
- * @returns {string}
+ * @param {object} options  Optional: { format: 'string'|'messages' }
+ * @returns {string|Array<{text: string, cache_control?: object}>}
  */
-export function buildPrompt(agentId, task, context = {}, projectConfig = {}) {
+export function buildPrompt(agentId, task, context = {}, projectConfig = {}, options = {}) {
   const agent = loadAgent(agentId, projectConfig);
+  const format = options.format || 'string';
 
-  const sections = [
-    `## Task\n\n${task}`,
-    agent.prompt ? `## Agent Definition\n\n${agent.prompt}` : '',
-    agent.memory ? `\n${agent.memory}` : '',
-    agent.toolkitIndex
-      ? `## Available Tools\n\n\`\`\`yaml\n${agent.toolkitIndex}\`\`\`\n\nTo use a tool, describe which tool you want and why. The orchestrator will load its full definition.`
-      : '',
-    context.projectStack
-      ? `## Project Stack\n\n${Array.isArray(context.projectStack) ? context.projectStack.join(', ') : context.projectStack}`
-      : '',
-    context.specs ? `## Relevant Specs\n\n${context.specs}` : '',
-    `## Output Format\n\nReturn concrete artifacts (files, JSON, structured data) — not prose. Mark any learnings for graduation with [DECISION], [ERROR], or [DISCOVERY] tags.`,
-  ].filter(Boolean);
+  // Content blocks ordered for cache efficiency:
+  // 1. Static content FIRST (agent prompt, toolkit) — cached across dispatches
+  // 2. Semi-static content (memory, specs) — cached within session
+  // 3. Dynamic content LAST (task, output format) — never cached
+  const blocks = [];
 
-  return sections.join('\n\n');
+  // --- STATIC: Agent definition + toolkit (cacheable across all dispatches) ---
+  if (agent.prompt) {
+    blocks.push({
+      text: `## Agent Definition\n\n${agent.prompt}`,
+      cache_control: { type: 'ephemeral' },  // 5-min cache (reused across dispatches)
+    });
+  }
+
+  if (agent.toolkitIndex) {
+    blocks.push({
+      text: `## Available Tools\n\n\`\`\`yaml\n${agent.toolkitIndex}\`\`\`\n\nTo use a tool, describe which tool you want and why. The orchestrator will load its full definition.`,
+      cache_control: { type: 'ephemeral' },
+    });
+  }
+
+  // --- SEMI-STATIC: Project context (cacheable within session) ---
+  if (context.projectStack) {
+    blocks.push({
+      text: `## Project Stack\n\n${Array.isArray(context.projectStack) ? context.projectStack.join(', ') : context.projectStack}`,
+      cache_control: { type: 'ephemeral' },
+    });
+  }
+
+  if (context.specs) {
+    blocks.push({
+      text: `## Relevant Specs\n\n${context.specs}`,
+      cache_control: { type: 'ephemeral' },
+    });
+  }
+
+  if (agent.memory) {
+    blocks.push({ text: `\n${agent.memory}` });
+  }
+
+  // --- DYNAMIC: Task-specific content (never cached) ---
+  blocks.push({ text: `## Task\n\n${task}` });
+
+  // Output schema for structured responses
+  if (context.outputSchema) {
+    blocks.push({
+      text: `## Output Schema\n\nReturn your response as JSON conforming to this schema:\n\n\`\`\`json\n${
+        typeof context.outputSchema === 'string'
+          ? context.outputSchema
+          : JSON.stringify(context.outputSchema, null, 2)
+      }\`\`\``,
+    });
+  }
+
+  blocks.push({
+    text: `## Output Format\n\nReturn concrete artifacts (files, JSON, structured data) — not prose. Mark any learnings for graduation with [DECISION], [ERROR], or [DISCOVERY] tags.`,
+  });
+
+  if (format === 'messages') {
+    return blocks;
+  }
+
+  // String format: join all blocks, ignore cache_control
+  return blocks.map(b => b.text).filter(Boolean).join('\n\n');
+}
+
+/**
+ * Load a JSON schema for structured output validation.
+ * @param {string} schemaName  e.g. 'security-review', 'requirements'
+ * @returns {object|null} Parsed JSON schema, or null if not found
+ */
+export function loadSchema(schemaName) {
+  const schemaFile = path.join(SCHEMAS_DIR, `${sanitizeId(schemaName)}.schema.json`);
+  if (!fs.existsSync(schemaFile)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(schemaFile, 'utf-8'));
+  } catch {
+    return null;
+  }
 }
 
 // CLI interface — guarded so it only runs when invoked directly
@@ -155,7 +226,20 @@ if (_cliArg.replace(/\\/g, '/') === _moduleUrl.replace(/\\/g, '/')) {
     const agents = getTeamAgents(args[0]);
     console.log(JSON.stringify(agents));
   } else if (command === 'prompt') {
-    const prompt = buildPrompt(args[0], args[1] || 'No task specified', {}, {});
-    process.stdout.write(prompt);
+    const format = args.includes('--messages') ? 'messages' : 'string';
+    const prompt = buildPrompt(args[0], args[1] || 'No task specified', {}, {}, { format });
+    if (format === 'messages') {
+      console.log(JSON.stringify(prompt, null, 2));
+    } else {
+      process.stdout.write(prompt);
+    }
+  } else if (command === 'schema') {
+    const schema = loadSchema(args[0]);
+    if (schema) {
+      console.log(JSON.stringify(schema, null, 2));
+    } else {
+      console.error(`Schema not found: ${args[0]}`);
+      process.exit(1);
+    }
   }
 }

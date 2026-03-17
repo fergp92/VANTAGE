@@ -1,0 +1,11 @@
+agent: "31-performance-engineer"
+verified_date: "2026-03-17"
+tools:
+  - id: load-test-scaffold
+    description: "Generate load test scripts for k6 or Artillery"
+  - id: benchmark-runner
+    description: "Run performance benchmarks and compare against baselines"
+  - id: bottleneck-analyzer
+    description: "Identify performance bottlenecks from profiling data"
+  - id: performance-budget
+    description: "Define and enforce performance budgets for response times and resources"

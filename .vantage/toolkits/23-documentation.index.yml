@@ -1,0 +1,11 @@
+agent: "23-documentation"
+verified_date: "2026-03-17"
+tools:
+  - id: doc-template
+    description: "Generate documentation templates for README, ADR, and runbooks"
+  - id: api-doc-generator
+    description: "Generate API documentation from OpenAPI spec or code comments"
+  - id: diagram-generator
+    description: "Create architecture and sequence diagrams in Mermaid format"
+  - id: changelog-template
+    description: "Generate changelog entries following Keep a Changelog format"

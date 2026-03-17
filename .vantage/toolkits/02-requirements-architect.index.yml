@@ -1,4 +1,5 @@
 agent: "02-requirements-architect"
+verified_date: "2026-03-17"
 tools:
   - id: user-story-template
     description: "Structured user story template with acceptance criteria"

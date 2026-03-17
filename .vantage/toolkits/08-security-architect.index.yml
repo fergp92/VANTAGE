@@ -1,4 +1,5 @@
 agent: "08-security-architect"
+verified_date: "2026-03-17"
 tools:
   - id: stride-analysis
     description: "STRIDE threat model template with per-component analysis"

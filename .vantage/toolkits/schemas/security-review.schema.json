@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vantage.dev/schemas/security-review.schema.json",
+  "title": "Security Review Artifact",
+  "description": "Phase 3 (Security) output. Contains threat model, controls matrix, IAM design, and crypto standards. Agent 08 (Security Architect) has veto power — if approved is false, implementation must not proceed.",
+  "type": "object",
+  "required": [
+    "threat_model",
+    "controls_matrix",
+    "iam_design",
+    "crypto_standards",
+    "approved"
+  ],
+  "properties": {
+    "threat_model": {
+      "type": "object",
+      "description": "STRIDE-based threat model.",
+      "required": ["scope", "threats"],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "description": "What is being threat-modeled."
+        },
+        "threats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "category", "description", "likelihood", "impact", "risk_score", "mitigations"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^THREAT-\\d+$",
+                "description": "Unique threat identifier."
+              },
+              "category": {
+                "type": "string",
+                "enum": ["spoofing", "tampering", "repudiation", "information_disclosure", "denial_of_service", "elevation_of_privilege"],
+                "description": "STRIDE category."
+              },
+              "description": {
+                "type": "string",
+                "description": "What the threat is and how it could be exploited."
+              },
+              "likelihood": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"],
+                "description": "How likely this threat is to be exploited."
+              },
+              "impact": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"],
+                "description": "Business impact if exploited."
+              },
+              "risk_score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "Combined risk score (0-10)."
+              },
+              "mitigations": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Controls or design decisions that mitigate this threat."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "controls_matrix": {
+      "type": "array",
+      "description": "Security controls mapped to compliance frameworks.",
+      "items": {
+        "type": "object",
+        "required": ["control_id", "control_name", "framework", "implementation_status"],
+        "properties": {
+          "control_id": {
+            "type": "string",
+            "description": "Control identifier, e.g. 'AC-01', 'SC-13'."
+          },
+          "control_name": {
+            "type": "string",
+            "description": "Human-readable control name."
+          },
+          "framework": {
+            "type": "string",
+            "description": "Source framework, e.g. 'NIST 800-53', 'CIS', 'OWASP'."
+          },
+          "implementation_status": {
+            "type": "string",
+            "enum": ["implemented", "partial", "planned", "not_applicable"],
+            "description": "Current implementation status."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "iam_design": {
+      "type": "object",
+      "description": "Identity and access management architecture.",
+      "required": ["auth_method", "token_strategy", "rbac_roles", "permission_model"],
+      "properties": {
+        "auth_method": {
+          "type": "string",
+          "description": "Authentication method, e.g. 'OAuth2 + PKCE', 'mTLS', 'SAML'."
+        },
+        "token_strategy": {
+          "type": "string",
+          "description": "Token type and lifecycle, e.g. 'JWT with 15min access + 7d refresh'."
+        },
+        "rbac_roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["role", "permissions"],
+            "properties": {
+              "role": { "type": "string" },
+              "permissions": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": "Role definitions and their permissions."
+        },
+        "permission_model": {
+          "type": "string",
+          "description": "Permission model description, e.g. 'RBAC with resource-level scoping'."
+        }
+      },
+      "additionalProperties": false
+    },
+    "crypto_standards": {
+      "type": "object",
+      "description": "Cryptographic standards and key management.",
+      "required": ["encryption_at_rest", "encryption_in_transit", "key_management"],
+      "properties": {
+        "encryption_at_rest": {
+          "type": "string",
+          "description": "Algorithm and mode, e.g. 'AES-256-GCM'."
+        },
+        "encryption_in_transit": {
+          "type": "string",
+          "description": "Transport security, e.g. 'TLS 1.3'."
+        },
+        "key_management": {
+          "type": "string",
+          "description": "Key management approach, e.g. 'AWS KMS with automatic rotation'."
+        }
+      },
+      "additionalProperties": false
+    },
+    "approved": {
+      "type": "boolean",
+      "description": "Whether the Security Architect (Agent 08) approves the design for implementation. If false, implementation MUST NOT proceed."
+    },
+    "veto_reasons": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Reasons for veto if approved is false. Must be provided when approved is false."
+    }
+  },
+  "additionalProperties": false
+}

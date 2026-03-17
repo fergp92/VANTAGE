@@ -30,6 +30,13 @@ tokens:
   show_estimate: true
   track_actual: true
 
+prompt_cache:
+  enabled: true
+  strategy: ephemeral        # 'ephemeral' (5-min TTL) or 'extended' (1-hour TTL)
+  cache_agent_prompts: true  # Cache static agent definitions across dispatches
+  cache_toolkit_indices: true # Cache toolkit indices across dispatches
+  cache_project_context: true # Cache project stack and specs within session
+
 ceremony:
   default: standard
   levels:

@@ -1,0 +1,11 @@
+agent: "33-data-engineer"
+verified_date: "2026-03-17"
+tools:
+  - id: migration-template
+    description: "Generate database migration with up/down and rollback scripts"
+  - id: seed-generator
+    description: "Create seed data scripts from schema and domain constraints"
+  - id: etl-pipeline-template
+    description: "Scaffold ETL pipeline with extract, transform, and load stages"
+  - id: data-validation-rules
+    description: "Define data quality validation rules and integrity checks"

@@ -1,0 +1,245 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vantage.dev/schemas/implementation.schema.json",
+  "title": "Implementation Artifact",
+  "description": "Phase 4 (Implementation) output. Documents code produced across Clean Architecture layers and tracks all files created.",
+  "type": "object",
+  "required": [
+    "domain_layer",
+    "application_layer",
+    "adapter_layer",
+    "files_created"
+  ],
+  "properties": {
+    "domain_layer": {
+      "type": "object",
+      "description": "Core domain logic — zero external dependencies.",
+      "required": ["entities", "use_cases", "value_objects"],
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string", "description": "Relative file path." },
+              "methods": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Key public methods."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "use_cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "description": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "value_objects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "application_layer": {
+      "type": "object",
+      "description": "Application services, DTOs, and CQRS patterns.",
+      "required": ["services", "dtos", "commands", "queries"],
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "depends_on": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Use cases or domain services this service orchestrates."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "dtos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "handler": { "type": "string", "description": "Command handler file." }
+            },
+            "additionalProperties": false
+          }
+        },
+        "queries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "handler": { "type": "string", "description": "Query handler file." }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "adapter_layer": {
+      "type": "object",
+      "description": "Infrastructure adapters — repositories, controllers, external clients.",
+      "required": ["repositories", "controllers", "clients"],
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "entity": { "type": "string", "description": "Domain entity this repository persists." }
+            },
+            "additionalProperties": false
+          }
+        },
+        "controllers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "routes": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "API routes handled by this controller."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "clients": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "external_system": { "type": "string", "description": "External system this client integrates with." }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "frontend": {
+      "type": "object",
+      "description": "Frontend implementation details (if applicable).",
+      "properties": {
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["page", "layout", "feature", "ui", "shared"],
+                "description": "Component classification."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "pages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "route", "file"],
+            "properties": {
+              "name": { "type": "string" },
+              "route": { "type": "string" },
+              "file": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "state_management": {
+          "type": "string",
+          "description": "State management approach, e.g. 'Redux Toolkit', 'Zustand', 'React Context'."
+        }
+      },
+      "additionalProperties": false
+    },
+    "files_created": {
+      "type": "array",
+      "description": "Complete manifest of files created during implementation.",
+      "items": {
+        "type": "object",
+        "required": ["path", "purpose", "layer"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Relative file path from project root."
+          },
+          "purpose": {
+            "type": "string",
+            "description": "What this file does."
+          },
+          "layer": {
+            "type": "string",
+            "enum": ["domain", "application", "adapter", "frontend", "infrastructure", "config", "test"],
+            "description": "Clean Architecture layer this file belongs to."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,11 @@
+agent: "20-sast"
+verified_date: "2026-03-17"
+tools:
+  - id: sast-scanner
+    description: "Run static analysis to detect OWASP Top 10 vulnerabilities"
+  - id: dependency-audit
+    description: "Audit dependencies for known CVEs and license violations"
+  - id: cwe-mapper
+    description: "Map code findings to CWE identifiers and remediation guidance"
+  - id: supply-chain-check
+    description: "Verify package integrity and supply chain security"

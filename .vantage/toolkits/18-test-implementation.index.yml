@@ -1,0 +1,11 @@
+agent: "18-test-implementation"
+verified_date: "2026-03-17"
+tools:
+  - id: test-scaffold
+    description: "Generate test file with describe/it structure and setup/teardown"
+  - id: mock-generator
+    description: "Create mock implementations for dependencies and external services"
+  - id: fixture-builder
+    description: "Build test fixtures and factory functions from domain models"
+  - id: e2e-test-template
+    description: "Scaffold end-to-end test with page objects and assertions"

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
 import { sanitizeId } from './utils.js';
+import { loadWithRAG } from './rag-manager.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const MEMORY_DIR = path.join(__dirname, '..', 'memory', 'agents');
@@ -12,11 +13,22 @@ const CHARS_PER_TOKEN = 4;
 
 /**
  * Load agent memory, optionally truncated to token budget.
+ * When a query is provided, uses RAG-based retrieval (rag-manager.js)
+ * instead of simple truncation for more relevant results.
  * @param {string} agentId
  * @param {number} tokenBudget - max tokens to return (default 500)
+ * @param {string} [query] - optional query for RAG-based retrieval
  * @returns {string} Formatted memory section or empty string
  */
-export function load(agentId, tokenBudget = 500) {
+export function load(agentId, tokenBudget = 500, query) {
+  // When a query is provided, delegate to RAG-based retrieval
+  if (query) {
+    try {
+      return loadWithRAG(agentId, query, tokenBudget);
+    } catch {
+      // If RAG retrieval fails, fall through to truncation
+    }
+  }
   const filePath = path.join(MEMORY_DIR, `${sanitizeId(agentId)}.md`);
   if (!fs.existsSync(filePath)) return '';
 
@@ -184,7 +196,8 @@ if (_cliArg.replace(/\\/g, '/') === _moduleUrl.replace(/\\/g, '/')) {
 
   if (command === 'load') {
     const budget = parseInt(process.argv[4]) || 500;
-    const result = load(agentId, budget);
+    const query = process.argv[5] || undefined;
+    const result = load(agentId, budget, query);
     process.stdout.write(result);
   } else if (command === 'compact') {
     const threshold = parseInt(process.argv[4]) || 8000;

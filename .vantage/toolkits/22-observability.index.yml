@@ -1,0 +1,11 @@
+agent: "22-observability"
+verified_date: "2026-03-17"
+tools:
+  - id: dashboard-template
+    description: "Generate monitoring dashboard config for Grafana or Datadog"
+  - id: alert-config
+    description: "Configure alerting rules with thresholds and escalation policies"
+  - id: structured-logging
+    description: "Set up structured logging with correlation IDs and log levels"
+  - id: tracing-setup
+    description: "Configure distributed tracing with OpenTelemetry"

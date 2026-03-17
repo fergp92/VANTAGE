@@ -1,0 +1,9 @@
+agent: "01-architecture-board"
+verified_date: "2026-03-17"
+tools:
+  - id: adr-template
+    description: "Architecture Decision Record template with status tracking"
+  - id: architecture-compliance-check
+    description: "Verify architecture decisions against clean architecture invariants"
+  - id: dependency-direction-validator
+    description: "Validate dependency direction follows inward-only rule"

@@ -13,11 +13,12 @@ agents/              34 agent system prompts (NN-agent-name.md format)
 docs/                Framework documentation and guides
 bin/                 CLI entry point (npx vantage init)
 .vantage/            v2.0 Runtime
-├── runtime/         7 modules: memory-manager, toolkit-loader, token-estimator,
-│   │                scout-service, agent-registry, maintenance, session-lock
-│   └── __tests__/   50+ tests (Node.js built-in test runner)
+├── runtime/         9 modules: memory-manager, toolkit-loader, token-estimator,
+│   │                scout-service, agent-registry, maintenance, session-lock,
+│   │                rag-manager, utils
+│   └── __tests__/   60+ tests (Node.js built-in test runner)
 ├── skills/          6 phase skill definitions (discovery → operations)
-├── toolkits/        7 agent indices + 24 tool definitions (YAML)
+├── toolkits/        34 agent indices + 24 tool definitions + 7 handoff schemas
 ├── locks/           Session lock files (crash recovery)
 ├── memory/          Persistent agent memory (auto-managed, gitignored)
 └── config.yml       Project configuration (ceremony levels, git strategy, etc.)
@@ -50,9 +51,11 @@ node --test __tests__/*.test.js
 | `toolkit-loader.js` | `loadIndex`, `loadTool`, `listTools` | Two-level YAML toolkit loading |
 | `token-estimator.js` | `estimate`, `formatEstimate`, `track`, `formatDashboard` | Token cost estimation + actual usage tracking |
 | `scout-service.js` | `loadCache`, `saveEvaluation`, `search` | OSS package evaluation cache |
-| `agent-registry.js` | `loadAgent`, `getTeamAgents`, `buildPrompt` | Agent loading + subagent prompt assembly |
-| `maintenance.js` | `shouldRun`, `audit` | Toolkit integrity + vulnerability auditing |
+| `agent-registry.js` | `loadAgent`, `getTeamAgents`, `buildPrompt`, `loadSchema` | Agent loading, prompt caching, structured output schemas |
+| `maintenance.js` | `shouldRun`, `audit` | Toolkit integrity, stale tool detection, vulnerability auditing |
 | `session-lock.js` | `acquireLock`, `releaseLock`, `checkStaleLocks`, `clearStaleLocks` | Crash recovery + session state |
+| `rag-manager.js` | `chunkAgentMemory`, `buildIndex`, `search`, `loadWithRAG` | TF-IDF keyword retrieval over agent memory |
+| `utils.js` | `sanitizeId`, `getDirname` | Shared utilities across runtime modules |
 
 All modules have CLI interfaces guarded by `import.meta.url` checks. They can be run directly or imported as libraries.
 
@@ -64,7 +67,9 @@ All modules have CLI interfaces guarded by `import.meta.url` checks. They can be
 - Agent memory: `.vantage/memory/agents/agent-id.md` (gitignored)
 - Phase skills: `.vantage/skills/vantage-{phase}.md`
 - Session locks: `.vantage/locks/{phase}-{timestamp}.lock`
-- Cost ledger: `.vantage/memory/cost-ledger.yml`
+- Cost ledger: `.vantage/memory/cost-ledger.json`
+- RAG indices: `.vantage/memory/indices/{agentId}.index.json`
+- Handoff schemas: `.vantage/toolkits/schemas/{phase}.schema.json`
 - Project state: `backlog/PROJECT-STATE.md`
 
 ## Agent Numbering & Layers
@@ -103,6 +108,27 @@ These rules must not be violated in any agent prompt or documentation:
 4. Clean Architecture: dependencies point inward only — Domain < App < Infrastructure < UI
 5. Domain layer has zero external dependencies
 6. Context quality degrades above 50% usage — always dispatch subagents with fresh sessions
+
+## Token Optimization
+
+VANTAGE uses three strategies to minimize token waste:
+
+1. **Prompt Caching** — `buildPrompt()` supports `format: 'messages'` which returns cache-annotated content blocks. Static content (agent prompts, toolkits) gets `cache_control: { type: 'ephemeral' }` for 90% cost reduction on cache hits. Configure in `config.yml` under `prompt_cache`.
+
+2. **Structured Outputs** — JSON schemas in `.vantage/toolkits/schemas/` define inter-agent handoff formats. Use `loadSchema('security-review')` to load a schema, pass via `context.outputSchema` to `buildPrompt()`. Eliminates parsing failures and verbose text.
+
+3. **RAG Memory Retrieval** — `rag-manager.js` provides TF-IDF keyword search over agent memory instead of loading full files. Pass a `query` parameter to `memory-manager.js load()` to activate. Reduces memory token usage by 40-90%.
+
+```bash
+# Build prompt with cache annotations for API dispatch
+node .vantage/runtime/agent-registry.js prompt 08 "Review auth" --messages
+
+# Build RAG index for an agent's memory
+node .vantage/runtime/rag-manager.js index 08-security-architect
+
+# Search agent memory
+node .vantage/runtime/rag-manager.js search 08-security-architect "OWASP injection"
+```
 
 ## Development Framework
 

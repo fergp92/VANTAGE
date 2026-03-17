@@ -1,0 +1,11 @@
+agent: "14-adapters"
+verified_date: "2026-03-17"
+tools:
+  - id: repository-template
+    description: "Scaffold repository implementation with query methods"
+  - id: http-client-scaffold
+    description: "Generate HTTP client adapter with retry and circuit breaker"
+  - id: message-adapter-template
+    description: "Create message queue producer/consumer adapters"
+  - id: cache-adapter
+    description: "Generate cache adapter with TTL and invalidation strategies"

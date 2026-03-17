@@ -1,0 +1,11 @@
+agent: "28-backlog-manager"
+verified_date: "2026-03-17"
+tools:
+  - id: sprint-board
+    description: "Manage sprint board with columns and WIP limits"
+  - id: velocity-tracker
+    description: "Calculate team velocity from completed story points"
+  - id: backlog-groomer
+    description: "Identify stale items and suggest backlog refinement actions"
+  - id: dependency-graph
+    description: "Map inter-story dependencies and identify critical path"

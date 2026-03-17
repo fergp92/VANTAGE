@@ -1,0 +1,11 @@
+agent: "07-infrastructure-architect"
+verified_date: "2026-03-17"
+tools:
+  - id: terraform-template
+    description: "Generate Terraform modules for common infrastructure patterns"
+  - id: docker-config
+    description: "Generate Dockerfile and docker-compose configurations"
+  - id: network-topology-template
+    description: "Design network topology with subnets, security groups, and routing"
+  - id: disaster-recovery-plan
+    description: "Generate DR plan with RTO/RPO targets and failover procedures"

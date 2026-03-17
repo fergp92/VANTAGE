@@ -1,0 +1,11 @@
+agent: "13-app-services"
+verified_date: "2026-03-17"
+tools:
+  - id: service-template
+    description: "Scaffold application service with dependency injection"
+  - id: dto-generator
+    description: "Generate DTOs and mappers between domain and API layers"
+  - id: command-query-template
+    description: "Create CQRS command and query handler scaffolds"
+  - id: orchestration-flow
+    description: "Design multi-step service orchestration with error handling"

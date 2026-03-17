@@ -1,0 +1,11 @@
+agent: "11-threat-intelligence"
+verified_date: "2026-03-17"
+tools:
+  - id: attack-surface-scanner
+    description: "Enumerate and assess application attack surface by entry point"
+  - id: mitre-attack-mapper
+    description: "Map threats to MITRE ATT&CK techniques and mitigations"
+  - id: threat-model-template
+    description: "Generate threat model with attack trees and risk ratings"
+  - id: red-team-scenario
+    description: "Generate red team test scenarios for identified vulnerabilities"
