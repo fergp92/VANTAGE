@@ -23,6 +23,8 @@ scout:
 maintenance:
   auto_trigger_days: 30
   cve_sources: [npm-audit, github-advisories]
+  evaluation_stale_days: 180
+  lock_stale_minutes: 30
 
 tokens:
   show_estimate: true

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { load as loadMemory } from './memory-manager.js';
 import { loadIndex } from './toolkit-loader.js';
+import { sanitizeId } from './utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const AGENTS_DIR = path.resolve(__dirname, '..', '..', 'agents');
@@ -10,11 +11,6 @@ const PRESETS_FILE = path.resolve(__dirname, '..', '..', 'Arch standard', 'team-
 
 const MAIN_AGENTS = ['00', '08', '24'];
 const CORE_TEAM = ['00', '08', '24', '27', '28'];
-
-/** Sanitize ID to prevent path traversal */
-function sanitizeId(id) {
-  return path.basename(id).replace(/[^a-zA-Z0-9._-]/g, '');
-}
 
 /**
  * Load a single agent: prompt file, memory, and toolkit index.
@@ -141,11 +137,9 @@ export function buildPrompt(agentId, task, context = {}, projectConfig = {}) {
 }
 
 // CLI interface — guarded so it only runs when invoked directly
-const _argv1 = process.argv[1] || '';
-const _metaUrl = fileURLToPath(import.meta.url);
-const isMain = _argv1.replace(/\\/g, '/') === _metaUrl.replace(/\\/g, '/');
-
-if (isMain) {
+const _cliArg = process.argv[1] || '';
+const _moduleUrl = fileURLToPath(import.meta.url);
+if (_cliArg.replace(/\\/g, '/') === _moduleUrl.replace(/\\/g, '/')) {
   const [, , command, ...args] = process.argv;
   if (command === 'load') {
     const agent = loadAgent(args[0], {});

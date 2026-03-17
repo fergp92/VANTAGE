@@ -2,17 +2,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
+import { sanitizeId } from './utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const MEMORY_DIR = path.join(__dirname, '..', 'memory', 'agents');
 
 // Rough token estimate: ~4 chars per token
 const CHARS_PER_TOKEN = 4;
-
-/** Sanitize ID to prevent path traversal */
-function sanitizeId(id) {
-  return path.basename(id).replace(/[^a-zA-Z0-9._-]/g, '');
-}
 
 /**
  * Load agent memory, optionally truncated to token budget.
@@ -181,9 +177,9 @@ export function compactIfNeeded(agentId, threshold = 8000) {
 
 // CLI interface: node memory-manager.js <command> <agentId> [options]
 // Guarded so it only runs when invoked directly, not when imported
-const _argv1mm = process.argv[1] || '';
-const _metaUrlMm = fileURLToPath(import.meta.url);
-if (_argv1mm.replace(/\\/g, '/') === _metaUrlMm.replace(/\\/g, '/')) {
+const _cliArg = process.argv[1] || '';
+const _moduleUrl = fileURLToPath(import.meta.url);
+if (_cliArg.replace(/\\/g, '/') === _moduleUrl.replace(/\\/g, '/')) {
   const [,, command, agentId] = process.argv;
 
   if (command === 'load') {

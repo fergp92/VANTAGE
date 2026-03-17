@@ -76,7 +76,7 @@ export function formatEstimate(est, projectName = 'unnamed') {
 
 const COST_LEDGER_PATH = join(
   fileURLToPath(new URL('.', import.meta.url)),
-  '..', 'memory', 'cost-ledger.yml'
+  '..', 'memory', 'cost-ledger.json'
 );
 
 export function track(agentId, phaseId, tokensUsed) {
@@ -140,9 +140,9 @@ export function formatDashboard(estimate, ledger) {
 }
 
 // CLI interface — guarded
-const _argv1te = process.argv[1] || '';
-const _metaUrlTe = fileURLToPath(import.meta.url);
-if (_argv1te.replace(/\\/g, '/') === _metaUrlTe.replace(/\\/g, '/')) {
+const _cliArg = process.argv[1] || '';
+const _moduleUrl = fileURLToPath(import.meta.url);
+if (_cliArg.replace(/\\/g, '/') === _moduleUrl.replace(/\\/g, '/')) {
   const [,, command] = process.argv;
   if (command === 'estimate') {
     const args = process.argv.slice(3);

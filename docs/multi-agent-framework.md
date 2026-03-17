@@ -1,3 +1,5 @@
+> **DEPRECATED**: This document describes the original 24-agent v1.0 framework. For the current 34-agent system, see [VANTAGE.md](VANTAGE.md).
+
 # Multi-Agent System Framework for Secure Software Development
 
 ## Based on TOGAF ADM + Clean Architecture + Security-by-Design

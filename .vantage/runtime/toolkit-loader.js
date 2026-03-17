@@ -2,15 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
+import { sanitizeId } from './utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const TOOLKITS_DIR = path.join(__dirname, '..', 'toolkits');
-const TOOLS_DIR = path.join(TOOLKITS_DIR, 'tools');
-
-/** Sanitize ID to prevent path traversal */
-function sanitizeId(id) {
-  return path.basename(id).replace(/[^a-zA-Z0-9._-]/g, '');
-}
+export const TOOLKITS_DIR = path.join(__dirname, '..', 'toolkits');
+export const TOOLS_DIR = path.join(TOOLKITS_DIR, 'tools');
 
 export function loadIndex(agentId) {
   const filePath = path.join(TOOLKITS_DIR, `${sanitizeId(agentId)}.index.yml`);
@@ -33,9 +29,9 @@ export function listTools(agentId) {
 }
 
 // CLI interface — guarded
-const _argv1tl = process.argv[1] || '';
-const _metaUrlTl = fileURLToPath(import.meta.url);
-if (_argv1tl.replace(/\\/g, '/') === _metaUrlTl.replace(/\\/g, '/')) {
+const _cliArg = process.argv[1] || '';
+const _moduleUrl = fileURLToPath(import.meta.url);
+if (_cliArg.replace(/\\/g, '/') === _moduleUrl.replace(/\\/g, '/')) {
   const [,, command, id] = process.argv;
   if (command === 'index') {
     process.stdout.write(loadIndex(id));

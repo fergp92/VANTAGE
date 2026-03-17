@@ -2,10 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCache } from './scout-service.js';
+import { TOOLKITS_DIR, TOOLS_DIR } from './toolkit-loader.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const TOOLKITS_DIR = path.join(__dirname, '..', 'toolkits');
-const TOOLS_DIR = path.join(TOOLKITS_DIR, 'tools');
 
 export function shouldRun(config) {
   const lastAudit = config?.maintenance?.last_audit;
@@ -102,9 +101,9 @@ export function audit() {
 }
 
 // CLI interface — guarded
-const _argv1mt = process.argv[1] || '';
-const _metaUrlMt = fileURLToPath(import.meta.url);
-if (_argv1mt.replace(/\\/g, '/') === _metaUrlMt.replace(/\\/g, '/')) {
+const _cliArg = process.argv[1] || '';
+const _moduleUrl = fileURLToPath(import.meta.url);
+if (_cliArg.replace(/\\/g, '/') === _moduleUrl.replace(/\\/g, '/')) {
   const [,, command] = process.argv;
   if (command === 'audit') {
     const result = audit();

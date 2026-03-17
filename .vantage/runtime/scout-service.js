@@ -88,9 +88,9 @@ export function search(query, options = {}) {
 }
 
 // CLI interface — guarded
-const _argv1ss = process.argv[1] || '';
-const _metaUrlSs = fileURLToPath(import.meta.url);
-if (_argv1ss.replace(/\\/g, '/') === _metaUrlSs.replace(/\\/g, '/')) {
+const _cliArg = process.argv[1] || '';
+const _moduleUrl = fileURLToPath(import.meta.url);
+if (_cliArg.replace(/\\/g, '/') === _moduleUrl.replace(/\\/g, '/')) {
   const [,, command, ...args] = process.argv;
   if (command === 'search') {
     const query = args[0];

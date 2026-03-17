@@ -94,9 +94,9 @@ export function clearStaleLocks() {
 }
 
 // CLI interface — guarded
-const _argv1 = process.argv[1] || '';
-const _metaUrl = fileURLToPath(import.meta.url);
-if (_argv1.replace(/\\/g, '/') === _metaUrl.replace(/\\/g, '/')) {
+const _cliArg = process.argv[1] || '';
+const _moduleUrl = fileURLToPath(import.meta.url);
+if (_cliArg.replace(/\\/g, '/') === _moduleUrl.replace(/\\/g, '/')) {
   const [,, command] = process.argv;
   if (command === 'check') {
     const stale = checkStaleLocks();
