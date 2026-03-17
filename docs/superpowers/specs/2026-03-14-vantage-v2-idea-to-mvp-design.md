@@ -2,7 +2,7 @@
 
 **Date**: 2026-03-14
 **Status**: Draft
-**Author**: Fergus + Claude
+**Author**: VANTAGE Core Team
 **Scope**: Framework evolution — memory, subagents, toolkits, OSS scout, skills integration
 
 ---
