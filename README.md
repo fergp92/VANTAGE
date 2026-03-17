@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/banner.svg" alt="VANTAGE — Verified Agent Network for Trusted, Governed Engineering" width="100%"/>
+</p>
+
 # VANTAGE — Verified Agent Network for Trusted, Governed Engineering
 
 A multi-agent development framework that enforces **spec-first development**, **security-by-design**, and **professional-grade architecture** across any software project.
