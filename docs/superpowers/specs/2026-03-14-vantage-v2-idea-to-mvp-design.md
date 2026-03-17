@@ -1,4 +1,4 @@
-# USDAF v2.0 — "Idea to MVP" Runtime Evolution
+# VANTAGE v2.0 — "Idea to MVP" Runtime Evolution
 
 **Date**: 2026-03-14
 **Status**: Draft
@@ -9,7 +9,7 @@
 
 ## 1. Vision
 
-USDAF v2 transforms the framework from a system of static prompts into an **intelligent runtime** that learns, discovers, and optimizes tokens automatically. Someone arrives with an idea → USDAF orchestrates agents with memory, tools, and OSS knowledge → out comes an MVP with real value.
+VANTAGE v2 transforms the framework from a system of static prompts into an **intelligent runtime** that learns, discovers, and optimizes tokens automatically. Someone arrives with an idea → VANTAGE orchestrates agents with memory, tools, and OSS knowledge → out comes an MVP with real value.
 
 ### Principles
 
@@ -62,7 +62,7 @@ USDAF v2 transforms the framework from a system of static prompts into an **inte
 
 ### Typical Flow (idea → MVP)
 
-1. User invokes USDAF with an idea
+1. User invokes VANTAGE with an idea
 2. Token Estimator shows estimated range for the full project → user approves once
 3. Orchestrator activates phase skill `discovery`
 4. Discovery spawns **proactive OSS Scout** as subagent → maps stack against existing packages
@@ -91,7 +91,7 @@ Format: { decisions: [], errors: [], discoveries: [] }
 
 ```
 Storage: .md files in the project
-Location: .usdaf/memory/agents/{agent-id}.md
+Location: .vantage/memory/agents/{agent-id}.md
 Format: YAML frontmatter + dated entries
 ```
 
@@ -115,7 +115,7 @@ last_used: 2026-03-14
 
 **Injection**: memory-manager loads the last N entries (~500 tokens) and injects them as a `## Learnings from Previous Sessions` section at the top of the agent prompt.
 
-**Compaction**: when a memory file exceeds 8K tokens, old learnings are summarized into general patterns and archived to `.usdaf/memory/archive/`.
+**Compaction**: when a memory file exceeds 8K tokens, old learnings are summarized into general patterns and archived to `.vantage/memory/archive/`.
 
 **Graduation rules** (session → persistent):
 
@@ -129,7 +129,7 @@ last_used: 2026-03-14
 ### 3c. Evaluation Memory (for the Scout)
 
 ```
-Location: .usdaf/memory/evaluations.md
+Location: .vantage/memory/evaluations.md
 ```
 
 ```markdown
@@ -238,7 +238,7 @@ WITH SUBAGENTS (isolated):
 ### 5a. Lightweight Index (always loaded, ~200 tokens per agent)
 
 ```yaml
-# .usdaf/toolkits/08-security-architect.index.yml
+# .vantage/toolkits/08-security-architect.index.yml
 agent: "08-security-architect"
 tools:
   - id: stride-analysis
@@ -256,7 +256,7 @@ tools:
 ### 5b. Full Definition (loaded on-demand, ~500 tokens each)
 
 ```yaml
-# .usdaf/toolkits/tools/stride-analysis.tool.yml
+# .vantage/toolkits/tools/stride-analysis.tool.yml
 id: stride-analysis
 description: "STRIDE threat model template"
 when_to_use: "During security review of new components or APIs"
@@ -344,7 +344,7 @@ Agent 14 (Adapters): "Need an S3 client compatible with MinIO"
 
 ### 6c. Evaluation Cache
 
-All evaluations persist in `.usdaf/memory/evaluations.md`. Before searching, the Scout checks the cache. If evaluation is < 90 days old, it reuses it. If > 90 days, it re-evaluates.
+All evaluations persist in `.vantage/memory/evaluations.md`. Before searching, the Scout checks the cache. If evaluation is < 90 days old, it reuses it. If > 90 days, it re-evaluates.
 
 ---
 
@@ -352,16 +352,16 @@ All evaluations persist in `.usdaf/memory/evaluations.md`. Before searching, the
 
 ### 7a. Phase Skills (for the Orchestrator)
 
-Each USDAF phase is encapsulated in a skill the Orchestrator invokes:
+Each VANTAGE phase is encapsulated in a skill the Orchestrator invokes:
 
 ```
 skills/
-  usdaf-discovery.md      → Phase 1: requirements, OSS scout, stack mapping
-  usdaf-architecture.md   → Phase 2: C4, DDD, API contracts, ERD
-  usdaf-security.md       → Phase 3: threat model, controls, STRIDE
-  usdaf-implementation.md → Phase 4: TDD, code generation, reactive scout
-  usdaf-qa.md             → Phase 5: test execution, coverage, review
-  usdaf-operations.md     → Phase 6: CI/CD, observability, deploy
+  vantage-discovery.md      → Phase 1: requirements, OSS scout, stack mapping
+  vantage-architecture.md   → Phase 2: C4, DDD, API contracts, ERD
+  vantage-security.md       → Phase 3: threat model, controls, STRIDE
+  vantage-implementation.md → Phase 4: TDD, code generation, reactive scout
+  vantage-qa.md             → Phase 5: test execution, coverage, review
+  vantage-operations.md     → Phase 6: CI/CD, observability, deploy
 ```
 
 Each phase skill defines:
@@ -431,7 +431,7 @@ Integrated in the Orchestrator. At the start of a project, estimates tokens and 
 
 ```
 ╔══════════════════════════════════════════════════╗
-║  USDAF v2.0 — Token Estimate                    ║
+║  VANTAGE v2.0 — Token Estimate                    ║
 ║                                                  ║
 ║  Project: kiwi-api auth module                   ║
 ║  Team: 8 agents active                           ║
@@ -469,8 +469,8 @@ The phase breakdown is **informational only**. The user approves once for the en
 ## 10. File Structure
 
 ```
-.usdaf/
-├── config.yml                    # USDAF project configuration
+.vantage/
+├── config.yml                    # VANTAGE project configuration
 ├── memory/
 │   ├── agents/
 │   │   ├── 00-orchestrator.md
@@ -496,12 +496,12 @@ The phase breakdown is **informational only**. The user approves once for the en
 │   ├── token-estimator.js        # Estimate + track + report
 │   └── maintenance.js            # Audit tools/deps
 └── skills/
-    ├── usdaf-discovery.md
-    ├── usdaf-architecture.md
-    ├── usdaf-security.md
-    ├── usdaf-implementation.md
-    ├── usdaf-qa.md
-    └── usdaf-operations.md
+    ├── vantage-discovery.md
+    ├── vantage-architecture.md
+    ├── vantage-security.md
+    ├── vantage-implementation.md
+    ├── vantage-qa.md
+    └── vantage-operations.md
 ```
 
 ---
@@ -509,8 +509,8 @@ The phase breakdown is **informational only**. The user approves once for the en
 ## 11. Quickstart
 
 ```bash
-# 1. Init USDAF in a project
-npx usdaf init
+# 1. Init VANTAGE in a project
+npx vantage init
 
 # 2. Select team preset
 ? Team preset: Full Stack Application
@@ -519,7 +519,7 @@ npx usdaf init
 > "Build a REST API for user management with JWT auth,
 >  PostgreSQL, and role-based access control"
 
-# USDAF automatically:
+# VANTAGE automatically:
 # → Shows token estimate → user approves once
 # → Discovery: requirements + OSS Scout (jose, drizzle, zod...)
 # → Architecture: API contract, ERD, C4 diagrams
@@ -533,24 +533,24 @@ npx usdaf init
 
 ## 12. Runtime Invocation & Init
 
-### 12a. What `npx usdaf init` does
+### 12a. What `npx vantage init` does
 
-USDAF v2 ships as an npm package (`usdaf`). The init command:
+VANTAGE v2 ships as an npm package (`vantage`). The init command:
 
-1. Creates the `.usdaf/` directory structure (memory, toolkits, runtime, skills)
-2. Generates `.usdaf/config.yml` from user prompts (team preset, project name)
-3. Copies phase skill files into `.usdaf/skills/`
+1. Creates the `.vantage/` directory structure (memory, toolkits, runtime, skills)
+2. Generates `.vantage/config.yml` from user prompts (team preset, project name)
+3. Copies phase skill files into `.vantage/skills/`
 4. Copies toolkit indices for the selected team preset agents
-5. Adds `.usdaf/memory/` to `.gitignore` (personal learnings, not shared)
-6. Adds `.usdaf/toolkits/` and `.usdaf/skills/` to git (shared team knowledge)
-7. Injects a `CLAUDE.md` section that tells Claude Code how to load the USDAF runtime
+5. Adds `.vantage/memory/` to `.gitignore` (personal learnings, not shared)
+6. Adds `.vantage/toolkits/` and `.vantage/skills/` to git (shared team knowledge)
+7. Injects a `CLAUDE.md` section that tells Claude Code how to load the VANTAGE runtime
 
 ### 12b. How it hooks into Claude Code
 
-The USDAF runtime is **prompt-driven, not code-driven**. The `.usdaf/` files are consumed by Claude Code through:
+The VANTAGE runtime is **prompt-driven, not code-driven**. The `.vantage/` files are consumed by Claude Code through:
 
-- **CLAUDE.md injection**: `npx usdaf init` adds instructions to CLAUDE.md that tell Claude to read `.usdaf/config.yml` and follow the phase skills
-- **Skills**: phase skills (`.usdaf/skills/usdaf-*.md`) are registered as Claude Code skills via the superpowers plugin system
+- **CLAUDE.md injection**: `npx vantage init` adds instructions to CLAUDE.md that tell Claude to read `.vantage/config.yml` and follow the phase skills
+- **Skills**: phase skills (`.vantage/skills/vantage-*.md`) are registered as Claude Code skills via the superpowers plugin system
 - **Subagent dispatch**: uses Claude Code's native `Agent` tool with `subagent_type` parameter — no custom process spawning
 - **Worktree isolation**: uses Claude Code's native `isolation: "worktree"` parameter on the Agent tool
 
@@ -558,17 +558,17 @@ The runtime `.js` files are **helper scripts** that Claude Code calls via Bash, 
 
 ```bash
 # Claude Code runs these as needed:
-node .usdaf/runtime/memory-manager.js load 08-security-architect
-node .usdaf/runtime/toolkit-loader.js load stride-analysis
-node .usdaf/runtime/scout-service.js search "jwt library node"
-node .usdaf/runtime/token-estimator.js estimate --preset fullstack --complexity medium
-node .usdaf/runtime/maintenance.js audit
+node .vantage/runtime/memory-manager.js load 08-security-architect
+node .vantage/runtime/toolkit-loader.js load stride-analysis
+node .vantage/runtime/scout-service.js search "jwt library node"
+node .vantage/runtime/token-estimator.js estimate --preset fullstack --complexity medium
+node .vantage/runtime/maintenance.js audit
 ```
 
 ### 12c. Config Schema
 
 ```yaml
-# .usdaf/config.yml
+# .vantage/config.yml
 project:
   name: "kiwi-api"
   description: "IAM platform API"
@@ -609,8 +609,8 @@ When the Orchestrator (or any main agent) needs to dispatch a subagent:
 
 1. **Build prompt**: `agent-registry.js` assembles the subagent prompt by combining:
    - Agent definition from `agents/{id}.md`
-   - Memory from `.usdaf/memory/agents/{id}.md` (last N entries)
-   - Toolkit index from `.usdaf/toolkits/{id}.index.yml`
+   - Memory from `.vantage/memory/agents/{id}.md` (last N entries)
+   - Toolkit index from `.vantage/toolkits/{id}.index.yml`
    - Task-specific context (specs, artifacts from prior phases)
 
 2. **Dispatch**: Claude Code's Agent tool is invoked:
@@ -695,17 +695,17 @@ Agent({ prompt: "Compliance framework check...", run_in_background: true })
 
 ## 15. Phase Mapping (v1.0 → v2.0)
 
-USDAF v1.0 has 8 phases (0-7). v2.0 consolidates into 6 phase skills for simplicity, mapping as follows:
+VANTAGE v1.0 has 8 phases (0-7). v2.0 consolidates into 6 phase skills for simplicity, mapping as follows:
 
 | v1.0 Phase | v2.0 Phase Skill | Notes |
 |------------|------------------|-------|
 | 0 - Kickoff | (handled by Orchestrator) | Config, team selection, token estimate — not a separate skill |
-| 1 - Discovery | `usdaf-discovery` | Requirements + OSS Scout |
-| 2 - Architecture | `usdaf-architecture` | C4, DDD, API contracts, ERD |
-| 3 - Security | `usdaf-security` | STRIDE, controls, veto gate |
-| 4 - Implementation | `usdaf-implementation` | TDD, code gen, reactive scout |
-| 5 - QA | `usdaf-qa` | Tests, coverage, code review |
-| 6 - Operations | `usdaf-operations` | CI/CD, observability, deploy |
+| 1 - Discovery | `vantage-discovery` | Requirements + OSS Scout |
+| 2 - Architecture | `vantage-architecture` | C4, DDD, API contracts, ERD |
+| 3 - Security | `vantage-security` | STRIDE, controls, veto gate |
+| 4 - Implementation | `vantage-implementation` | TDD, code gen, reactive scout |
+| 5 - QA | `vantage-qa` | Tests, coverage, code review |
+| 6 - Operations | `vantage-operations` | CI/CD, observability, deploy |
 | 7 - Governance | (merged into operations) | Ongoing governance handled by Maintenance Agent |
 
 Phase 0 (Kickoff) becomes the Orchestrator's init sequence. Phase 7 (Governance) merges into operations + Maintenance Agent for ongoing health.
@@ -833,27 +833,27 @@ function shouldRun(config) → boolean  // true if last audit > config.maintenan
 
 ### What gets committed (shared team knowledge)
 
-- `.usdaf/config.yml` — project configuration
-- `.usdaf/toolkits/` — toolkit indices and tool definitions
-- `.usdaf/skills/` — phase and tool skill definitions
+- `.vantage/config.yml` — project configuration
+- `.vantage/toolkits/` — toolkit indices and tool definitions
+- `.vantage/skills/` — phase and tool skill definitions
 
 ### What gets gitignored (personal learnings)
 
-- `.usdaf/memory/` — agent memories are per-developer, not shared
-- `.usdaf/memory/archive/` — compacted memories
+- `.vantage/memory/` — agent memories are per-developer, not shared
+- `.vantage/memory/archive/` — compacted memories
 
 **Rationale**: memory contains learnings specific to an individual's interaction style and mistakes. Sharing it would inject irrelevant context into other developers' agents. Toolkits and skills are universal — everyone benefits from the same tools.
 
-**Exception**: `.usdaf/memory/evaluations.md` IS committed — package evaluations are project knowledge, not personal.
+**Exception**: `.vantage/memory/evaluations.md` IS committed — package evaluations are project knowledge, not personal.
 
 ### Migration from v1.0
 
 No automated migration tool needed. v2.0 is additive:
 
-1. Run `npx usdaf init` in existing USDAF project
+1. Run `npx vantage init` in existing VANTAGE project
 2. Existing `agents/*.md` files are untouched — v2.0 reads them as-is
 3. Existing `Arch standard/` files are untouched — v2.0 references them
-4. New `.usdaf/` directory is created alongside existing structure
+4. New `.vantage/` directory is created alongside existing structure
 5. Phase skills reference existing agent definitions by ID
 
 ---
@@ -873,7 +873,7 @@ When multiple subagents run in parallel:
 
 ## 19. Estimated Development Cost
 
-Implementing USDAF v2.0 complete (runtime + toolkits + skills + memory + scout + maintenance):
+Implementing VANTAGE v2.0 complete (runtime + toolkits + skills + memory + scout + maintenance):
 
 | Component | Estimated Tokens |
 |-----------|-----------------|

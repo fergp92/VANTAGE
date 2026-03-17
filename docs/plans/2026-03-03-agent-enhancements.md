@@ -2,7 +2,7 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Add 7 verified gap-filling changes across 6 agent prompt files as a single PR contribution to USDAF.
+**Goal:** Add 7 verified gap-filling changes across 6 agent prompt files as a single PR contribution to VANTAGE.
 
 **Architecture:** Each task edits one agent's Markdown prompt file with precise text insertions. No build system exists — changes are Markdown only. Each task ends with a commit so the PR history is clean and reviewable.
 

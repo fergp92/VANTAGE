@@ -1,10 +1,10 @@
-# USDAF — Unified Spec-Driven Agile Framework v1.0
+# VANTAGE — Unified Spec-Driven Agile Framework v1.0
 
 > **No code is written until specs exist and are approved. Specs are the source of truth.**
 
 ## Overview
 
-USDAF merges the Multi-Agent Framework (25 agents, 7 phases, security gates) with spec-driven development and Backlog.md-style markdown-native task management into a single unified framework. Every development project passes through required phases with a project-specific agent team.
+VANTAGE merges the Multi-Agent Framework (25 agents, 7 phases, security gates) with spec-driven development and Backlog.md-style markdown-native task management into a single unified framework. Every development project passes through required phases with a project-specific agent team.
 
 ### Core Principles
 
@@ -340,7 +340,7 @@ completed_date: null
 labels: [security, auth, backend]
 milestone: v1.0
 priority: high            # critical | high | medium | low
-phase: 4-implementation   # USDAF phase reference
+phase: 4-implementation   # VANTAGE phase reference
 spec_ref: specs/openapi.yaml#/paths/~1auth~1login
 depends_on: [38, 39]
 sprint: sprint-003
@@ -368,7 +368,7 @@ sprint: sprint-003
 ```yaml
 project_name: "Project Name"
 task_prefix: "PROJ"
-framework: USDAF
+framework: VANTAGE
 statuses: [Backlog, To Do, In Progress, In Review, Done]
 default_status: Backlog
 labels: [frontend, backend, security, infra, docs, spec, test]
@@ -388,20 +388,20 @@ sprint_length_days: 14
 
 ## Invocation
 
-### PROMPT E: New USDAF Project
+### PROMPT E: New VANTAGE Project
 
 ```
-Read `Arch standard/USDAF.md`.
+Read `Arch standard/VANTAGE.md`.
 I want to start a new project: [describe project].
-Follow the USDAF phases starting from Phase 0 (Kickoff).
+Follow the VANTAGE phases starting from Phase 0 (Kickoff).
 Ask me which agents should be on the team.
 ```
 
-### PROMPT F: Apply USDAF to Existing Project
+### PROMPT F: Apply VANTAGE to Existing Project
 
 ```
-Read `Arch standard/USDAF.md` and `Arch standard/transformation-plan.md`.
-I want to apply USDAF to an existing project at [path].
+Read `Arch standard/VANTAGE.md` and `Arch standard/transformation-plan.md`.
+I want to apply VANTAGE to an existing project at [path].
 Assess current state, initialize backlog, and generate specs for what exists.
 ```
 
@@ -409,13 +409,13 @@ Assess current state, initialize backlog, and generate specs for what exists.
 
 ## Relationship to Existing Framework
 
-| Existing | USDAF |
+| Existing | VANTAGE |
 |----------|-------|
 | Prompts A-D | Still work unchanged (backward compatible) |
 | 7 Phases (1-7) | Extended to 8 phases (0-7) with Phase 0 Kickoff |
 | Gates G0-G5 | Extended to G-1 through G5 (added G-1 for kickoff) |
 | 25 Agents (00-25) | Extended to 34 agents (00-33) |
-| Transformation Waves 0-5 | Still work — USDAF adds spec/backlog layer on top |
+| Transformation Waves 0-5 | Still work — VANTAGE adds spec/backlog layer on top |
 | Artifact Registry | Extended with spec artifacts and backlog task files |
 | Security Veto | Preserved exactly as-is |
 | Clean Architecture | Preserved exactly as-is |
@@ -424,9 +424,9 @@ Assess current state, initialize backlog, and generate specs for what exists.
 
 ---
 
-## USDAF v2.0 — Intelligent Runtime
+## VANTAGE v2.0 — Intelligent Runtime
 
-USDAF v2.0 transforms the framework from static prompts into an intelligent runtime with:
+VANTAGE v2.0 transforms the framework from static prompts into an intelligent runtime with:
 
 ### Key Additions
 - **Agent Memory**: Session + persistent memory with graduation rules and automatic compaction
@@ -441,19 +441,19 @@ USDAF v2.0 transforms the framework from static prompts into an intelligent runt
 | v1.0 Phase | v2.0 Phase Skill | Notes |
 |------------|------------------|-------|
 | Phase 0: Governance | Absorbed into Orchestrator | Pre-flight checks automatic |
-| Phase 1: Requirements | `usdaf-discovery` | Combined with OSS scout |
-| Phase 2: Architecture | `usdaf-architecture` | C4, ERD, API contracts |
-| Phase 3: Security | `usdaf-security` | STRIDE, controls matrix |
-| Phase 4-5: Implementation | `usdaf-implementation` | TDD with worktrees |
-| Phase 6: Testing | `usdaf-qa` | Coverage + SAST |
-| Phase 7: Operations | `usdaf-operations` | CI/CD + docs |
+| Phase 1: Requirements | `vantage-discovery` | Combined with OSS scout |
+| Phase 2: Architecture | `vantage-architecture` | C4, ERD, API contracts |
+| Phase 3: Security | `vantage-security` | STRIDE, controls matrix |
+| Phase 4-5: Implementation | `vantage-implementation` | TDD with worktrees |
+| Phase 6: Testing | `vantage-qa` | Coverage + SAST |
+| Phase 7: Operations | `vantage-operations` | CI/CD + docs |
 
 ### Quick Start
 ```bash
-npx usdaf init
-# Edit .usdaf/config.yml
-# Start with your idea — USDAF handles the rest
+npx vantage init
+# Edit .vantage/config.yml
+# Start with your idea — VANTAGE handles the rest
 ```
 
 ### Full Spec
-See `docs/superpowers/specs/2026-03-14-usdaf-v2-idea-to-mvp-design.md`
+See `docs/superpowers/specs/2026-03-14-vantage-v2-idea-to-mvp-design.md`

@@ -1,9 +1,9 @@
 ---
-name: usdaf-discovery
-description: "USDAF Phase 1: Discovery — requirements gathering, OSS scout, stack mapping"
+name: vantage-discovery
+description: "VANTAGE Phase 1: Discovery — requirements gathering, OSS scout, stack mapping"
 ---
 
-# USDAF Discovery Phase
+# VANTAGE Discovery Phase
 
 ## Agents
 
@@ -21,7 +21,7 @@ Activate these agents for this phase:
    - Output: `requirements.md` with FR/NFR, user stories, acceptance criteria
 3. **Scout OSS packages**: Dispatch 25-Innovation Scout as subagent (parallel with step 2):
    - Input: identified technology needs from requirements
-   - First check evaluation cache: `node .usdaf/runtime/scout-service.js cache`
+   - First check evaluation cache: `node .vantage/runtime/scout-service.js cache`
    - Search for packages: `npm search`, `gh search repos`
    - Output: `dependency-map.md` with package evaluations
 4. **Draft spec**: Dispatch 27-Spec Writer as subagent:
@@ -43,6 +43,13 @@ Activate these agents for this phase:
 - [ ] Spec document complete with all sections filled
 - [ ] Backlog initialized with at least Phase 2 tasks
 
+## Context Strategy
+
+- Dispatch each subagent with a fresh session containing only: agent prompt, memory, and user's project description
+- Requirements Architect and Innovation Scout can run in parallel (independent inputs)
+- Keep Orchestrator context lean: only gate criteria results, not full subagent outputs
+- If requirements are complex (>20 user stories), split into domain-bounded discovery sessions
+
 ## Token Budget
 
 Estimated: 20-35K tokens
@@ -53,3 +60,11 @@ After phase completion, graduate learnings:
 - Decisions about technology choices → persistent memory
 - Package evaluations → evaluations.md cache
 - Discoveries about project constraints → persistent memory
+
+## Reassessment
+
+After gate approval:
+1. Orchestrator + Product Owner review remaining phases
+2. Re-estimate token budget based on actual discovery complexity
+3. Adjust team composition if project scope changed during discovery
+4. Update PROJECT-STATE.md with revised plan

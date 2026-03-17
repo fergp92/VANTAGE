@@ -1,9 +1,0 @@
-{
-  "name": "usdaf-runtime",
-  "version": "2.0.0",
-  "type": "module",
-  "description": "USDAF v2.0 runtime — memory, toolkits, scout, estimation",
-  "dependencies": {
-    "js-yaml": "^4.1.0"
-  }
-}

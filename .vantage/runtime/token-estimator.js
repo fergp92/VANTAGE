@@ -1,4 +1,6 @@
 import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { readFileSync as _readSync, writeFileSync as _writeSync, existsSync as _existsSync } from 'node:fs';
 
 const PHASES = ['discovery', 'architecture', 'security', 'implementation', 'qa', 'operations'];
 const COMPLEXITY_FACTOR = { simple: 0.7, medium: 1.0, complex: 1.5 };
@@ -56,7 +58,7 @@ export function estimate(config) {
 
 export function formatEstimate(est, projectName = 'unnamed') {
   const lines = [
-    `USDAF v2.0 — Token Estimate`,
+    `VANTAGE v2.0 — Token Estimate`,
     ``,
     `Project: ${projectName}`,
     `Estimated range: ${Math.round(est.total.min / 1000)}K - ${Math.round(est.total.max / 1000)}K tokens`,
@@ -67,6 +69,73 @@ export function formatEstimate(est, projectName = 'unnamed') {
     ...est.savings.memory > 0 ? [`Memory savings (est.): -${Math.round(est.savings.memory / 1000)}K`] : [],
     ...est.savings.scout > 0 ? [`Scout savings (est.):  -${Math.round(est.savings.scout / 1000)}K`] : [],
   ];
+  return lines.join('\n');
+}
+
+// --- Cost Tracking (P3 Enhancement) ---
+
+const COST_LEDGER_PATH = join(
+  fileURLToPath(new URL('.', import.meta.url)),
+  '..', 'memory', 'cost-ledger.yml'
+);
+
+export function track(agentId, phaseId, tokensUsed) {
+  let ledger = { entries: [], totals: { byAgent: {}, byPhase: {}, grand: 0 } };
+
+  if (_existsSync(COST_LEDGER_PATH)) {
+    try {
+      const raw = _readSync(COST_LEDGER_PATH, 'utf-8');
+      // Simple YAML-like parsing for the ledger
+      ledger = JSON.parse(raw);
+    } catch {
+      // Start fresh if corrupted
+    }
+  }
+
+  const entry = {
+    agent: agentId,
+    phase: phaseId,
+    tokens: tokensUsed,
+    timestamp: new Date().toISOString(),
+  };
+
+  ledger.entries.push(entry);
+
+  // Update totals
+  ledger.totals.byAgent[agentId] = (ledger.totals.byAgent[agentId] || 0) + tokensUsed;
+  ledger.totals.byPhase[phaseId] = (ledger.totals.byPhase[phaseId] || 0) + tokensUsed;
+  ledger.totals.grand += tokensUsed;
+
+  _writeSync(COST_LEDGER_PATH, JSON.stringify(ledger, null, 2));
+  return ledger.totals;
+}
+
+export function formatDashboard(estimate, ledger) {
+  const lines = [
+    'VANTAGE — Cost Dashboard',
+    '',
+    `Estimated: ${Math.round(estimate.total.min / 1000)}K - ${Math.round(estimate.total.max / 1000)}K tokens`,
+    `Actual:    ${Math.round((ledger?.totals?.grand || 0) / 1000)}K tokens`,
+    '',
+    'By Phase:',
+  ];
+
+  for (const phase of PHASES) {
+    const est = estimate.phases.find(p => p.name === phase);
+    const actual = ledger?.totals?.byPhase?.[phase] || 0;
+    const variance = est ? Math.round(((actual - est.min) / est.min) * 100) : 0;
+    lines.push(`  · ${phase.padEnd(20)} est: ${Math.round((est?.min || 0) / 1000)}K-${Math.round((est?.max || 0) / 1000)}K  actual: ${Math.round(actual / 1000)}K  (${variance > 0 ? '+' : ''}${variance}%)`);
+  }
+
+  lines.push('');
+  lines.push('By Agent (top 5):');
+  const agentEntries = Object.entries(ledger?.totals?.byAgent || {})
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+  for (const [agent, tokens] of agentEntries) {
+    lines.push(`  · Agent ${agent.padEnd(15)} ${Math.round(tokens / 1000)}K tokens`);
+  }
+
   return lines.join('\n');
 }
 
@@ -86,5 +155,18 @@ if (_argv1te.replace(/\\/g, '/') === _metaUrlTe.replace(/\\/g, '/')) {
       specCount: 4, requirementCount: 6, cachedLearnings: 0, cachedPackages: 0,
     });
     console.log(formatEstimate(result));
+  }
+  else if (command === 'dashboard') {
+    const agents = ['00', '02', '08', '12', '17'];
+    const est = estimate({
+      team: { preset: 'fullstack', agents },
+      complexity: 'medium',
+      specCount: 4, requirementCount: 6, cachedLearnings: 0, cachedPackages: 0,
+    });
+    let ledger = null;
+    if (_existsSync(COST_LEDGER_PATH)) {
+      try { ledger = JSON.parse(_readSync(COST_LEDGER_PATH, 'utf-8')); } catch { /* empty */ }
+    }
+    console.log(formatDashboard(est, ledger));
   }
 }

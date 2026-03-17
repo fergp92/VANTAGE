@@ -1,9 +1,9 @@
 ---
-name: usdaf-security
-description: "USDAF Phase 3: Security — STRIDE threat model, controls matrix, security requirements"
+name: vantage-security
+description: "VANTAGE Phase 3: Security — STRIDE threat model, controls matrix, security requirements"
 ---
 
-# USDAF Security Phase
+# VANTAGE Security Phase
 
 ## Agents
 
@@ -68,6 +68,14 @@ Activate these agents for this phase:
   - [ ] Veto lifted only after issues resolved
   - [ ] All other phases held until veto cleared
 
+## Context Strategy
+
+- Security Architect stays in main context (needs full situational awareness)
+- IAM, Secrets/Crypto, and Threat Intelligence run as parallel subagents with fresh sessions
+- Each security subagent receives: agent prompt, memory, threat model scope, and relevant architecture artifacts only
+- Consolidation happens in main context where Security Architect has full visibility
+- Gate decision made with all security artifacts visible but without subagent conversation history
+
 ## Token Budget
 
 Estimated: 15-25K tokens
@@ -81,3 +89,13 @@ After phase completion, graduate learnings:
 - AuthN/AuthZ patterns → persistent memory
 - Encryption decisions → persistent memory
 - Red team assumptions → persistent memory for future phases
+
+## Reassessment
+
+After gate approval (CRITICAL — security findings often change the implementation plan):
+1. Orchestrator + Product Owner + Security Architect review remaining phases
+2. Re-prioritize backlog: security-critical items move to top of Phase 4
+3. Add security-specific implementation tasks (encryption, auth, audit trail)
+4. Reassess token budget: security remediation may increase Phase 4 cost
+5. If veto was issued and lifted, document remediation in DECISIONS.md
+6. Update PROJECT-STATE.md with revised plan and security status

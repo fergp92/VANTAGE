@@ -1,9 +1,9 @@
 ---
-name: usdaf-architecture
-description: "USDAF Phase 2: Architecture — C4 diagrams, ERD, API contracts, ADRs"
+name: vantage-architecture
+description: "VANTAGE Phase 2: Architecture — C4 diagrams, ERD, API contracts, ADRs"
 ---
 
-# USDAF Architecture Phase
+# VANTAGE Architecture Phase
 
 ## Agents
 
@@ -62,6 +62,14 @@ Activate these agents for this phase:
 - [ ] No unresolved architectural conflicts or vetos
 - [ ] Backlog Phase 3 tasks properly scoped
 
+## Context Strategy
+
+- Each architect subagent gets a fresh session with: agent prompt, memory, requirements.md, and relevant prior artifacts only
+- Enterprise Architect runs first (C4 output feeds Data and Integration Architects)
+- Data Architect and Integration Architect can run in parallel after C4 is complete
+- Spec Writer gets only finalized artifacts, not intermediate drafts
+- Keep Architecture Board review focused: ADRs + diagrams only, not full conversation history
+
 ## Token Budget
 
 Estimated: 25-40K tokens
@@ -74,3 +82,12 @@ After phase completion, graduate learnings:
 - API patterns and integration points → persistent memory
 - Architectural decisions and rationale → ADR repository
 - Technology choices and justification → persistent memory
+
+## Reassessment
+
+After gate approval:
+1. Orchestrator + Product Owner review remaining phases
+2. Re-prioritize backlog based on architectural decisions (ADRs)
+3. Identify newly discovered integration points or complexity
+4. Adjust team composition if architecture requires additional specialists
+5. Update PROJECT-STATE.md with revised plan

@@ -1,12 +1,12 @@
-# USDAF — Backlog Guide
+# VANTAGE — Backlog Guide
 
-> How to use markdown-native task management within the USDAF framework. Based on Backlog.md patterns, adapted for spec-driven, phase-gated development.
+> How to use markdown-native task management within the VANTAGE framework. Based on Backlog.md patterns, adapted for spec-driven, phase-gated development.
 
 ---
 
 ## Directory Structure
 
-Every USDAF project has a `backlog/` directory at the project root:
+Every VANTAGE project has a `backlog/` directory at the project root:
 
 ```
 <project-root>/
@@ -274,7 +274,7 @@ Store in `backlog/milestones/`. One file per release:
 
 ## Backlog-to-Phase Mapping
 
-Tasks are tagged with their USDAF phase:
+Tasks are tagged with their VANTAGE phase:
 
 | Phase | Typical Labels | Agent Owners |
 |-------|---------------|-------------|
@@ -297,7 +297,7 @@ Tasks are tagged with their USDAF phase:
 # Project identity
 project_name: "My Project"
 task_prefix: "PROJ"
-framework: USDAF
+framework: VANTAGE
 
 # Workflow
 statuses:
@@ -322,7 +322,7 @@ labels:
   - tech-debt
   - epic
 
-# USDAF phases
+# VANTAGE phases
 phases:
   - 0-kickoff
   - 1-discovery

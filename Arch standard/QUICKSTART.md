@@ -70,12 +70,12 @@ framework/
 
 ---
 
-## USDAF v2.0 — Idea to MVP
+## VANTAGE v2.0 — Idea to MVP
 
 v2.0 adds an intelligent runtime. To use it:
 
-1. **Initialize**: `npx usdaf init` — creates `.usdaf/` directory with runtime, toolkits, skills, and config
-2. **Configure**: Edit `.usdaf/config.yml` — set project name, team preset, complexity
+1. **Initialize**: `npx vantage init` — creates `.vantage/` directory with runtime, toolkits, skills, and config
+2. **Configure**: Edit `.vantage/config.yml` — set project name, team preset, complexity
 3. **Start**: Describe your idea — the orchestrator estimates tokens and asks for approval
 4. **Execute**: Framework runs 6 phases automatically:
    - Discovery → Architecture → Security → Implementation → QA → Operations
@@ -84,17 +84,17 @@ v2.0 adds an intelligent runtime. To use it:
 ### Runtime Commands
 ```bash
 # Estimate tokens for a project
-node .usdaf/runtime/token-estimator.js estimate --complexity medium --agents 00,02,08,12,17
+node .vantage/runtime/token-estimator.js estimate --complexity medium --agents 00,02,08,12,17
 
 # Load agent memory
-node .usdaf/runtime/memory-manager.js load 08-security-architect
+node .vantage/runtime/memory-manager.js load 08-security-architect
 
 # Check maintenance status
-node .usdaf/runtime/maintenance.js check
+node .vantage/runtime/maintenance.js check
 
 # Run maintenance audit
-node .usdaf/runtime/maintenance.js audit
+node .vantage/runtime/maintenance.js audit
 
 # Search evaluation cache
-node .usdaf/runtime/scout-service.js search jwt --cache-only
+node .vantage/runtime/scout-service.js search jwt --cache-only
 ```

@@ -851,7 +851,7 @@ and add the corresponding certification section to each agent's prompt.
 
 ---
 
-## USDAF Agents (26-33) — Certification Map
+## VANTAGE Agents (26-33) — Certification Map
 
 ---
 
@@ -1106,4 +1106,4 @@ PostgreSQL Deep Knowledge:
 ---
 
 *Agent Professional Certification Map v2.0*
-*Companion to USDAF + Multi-Agent Framework v2.0*
+*Companion to VANTAGE + Multi-Agent Framework v2.0*

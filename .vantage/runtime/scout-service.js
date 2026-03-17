@@ -51,7 +51,7 @@ export function saveEvaluation(packageName, evaluation) {
   ].filter(Boolean).join('\n');
 
   if (!fs.existsSync(EVAL_FILE)) {
-    fs.writeFileSync(EVAL_FILE, `# USDAF Evaluation Cache\n\n${section}\n`, 'utf-8');
+    fs.writeFileSync(EVAL_FILE, `# VANTAGE Evaluation Cache\n\n${section}\n`, 'utf-8');
     return;
   }
   let content = fs.readFileSync(EVAL_FILE, 'utf-8');

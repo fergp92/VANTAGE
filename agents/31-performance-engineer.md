@@ -2,7 +2,7 @@
 
 ## CAPA: 4 (Quality Assurance)
 ## Role: Performance QA Engineer
-## Framework: USDAF (Unified Spec-Driven Agile Framework)
+## Framework: VANTAGE (Unified Spec-Driven Agile Framework)
 
 ---
 

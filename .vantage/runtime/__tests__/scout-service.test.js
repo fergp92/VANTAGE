@@ -10,7 +10,7 @@ const BACKUP = EVAL_FILE + '.bak';
 describe('scout-service', () => {
   beforeEach(() => {
     if (fs.existsSync(EVAL_FILE)) fs.copyFileSync(EVAL_FILE, BACKUP);
-    fs.writeFileSync(EVAL_FILE, '# USDAF Evaluation Cache\n\n', 'utf-8');
+    fs.writeFileSync(EVAL_FILE, '# VANTAGE Evaluation Cache\n\n', 'utf-8');
   });
 
   afterEach(() => {

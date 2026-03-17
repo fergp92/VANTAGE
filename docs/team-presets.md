@@ -1,4 +1,4 @@
-# USDAF — Team Presets
+# VANTAGE — Team Presets
 
 > Project-specific agent team configurations. Used by Agent 00 (Orchestrator) during Phase 0 (Kickoff).
 
@@ -22,7 +22,7 @@ These agents are **mandatory for every project**, regardless of preset:
 |---|-------|-----|
 | 00 | Orchestrator | Coordinates all phases and agents |
 | 08 | Security Architect | Veto power, security-by-design is non-negotiable |
-| 27 | Spec Writer | Spec-driven development is the foundation of USDAF |
+| 27 | Spec Writer | Spec-driven development is the foundation of VANTAGE |
 | 28 | Backlog Manager | Task lifecycle tracking is non-negotiable |
 
 ---

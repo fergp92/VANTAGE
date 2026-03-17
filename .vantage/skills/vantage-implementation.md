@@ -1,9 +1,9 @@
 ---
-name: usdaf-implementation
-description: "USDAF Phase 4: Implementation — TDD, component coding, worktree-based development"
+name: vantage-implementation
+description: "VANTAGE Phase 4: Implementation — TDD, component coding, worktree-based development"
 ---
 
-# USDAF Implementation Phase
+# VANTAGE Implementation Phase
 
 ## Agents
 
@@ -65,6 +65,68 @@ Activate these agents for this phase:
    - Track completion, report blockers
    - Maintain task dependency graph
 
+## Wave Execution
+
+Within each architectural layer, independent tasks run in parallel as "waves."
+The next wave waits for all tasks in the current wave to complete.
+
+### Wave Grouping Rules
+1. Tasks declare dependencies in their backlog entry
+2. Independent tasks within the same layer form a wave
+3. Waves execute in dependency order; tasks within a wave execute in parallel
+4. Cross-layer dependencies enforce layer ordering (Domain → App → Adapters → Frontend)
+
+### Example Wave Plan
+```
+Wave 1 (Domain — parallel):
+  ├── Task: User entity + use cases          → Agent 12 (worktree)
+  ├── Task: Product entity + use cases       → Agent 12 (worktree)
+  └── Task: Order entity + use cases         → Agent 12 (worktree)
+
+Wave 2 (App Services — parallel, depends on Wave 1):
+  ├── Task: UserService                      → Agent 13 (worktree)
+  ├── Task: ProductService                   → Agent 13 (worktree)
+  └── Task: OrderService                     → Agent 13 (worktree)
+
+Wave 3 (Adapters — parallel, depends on Wave 2):
+  ├── Task: UserRepository + DB adapter      → Agent 14 (worktree)
+  ├── Task: ProductRepository + DB adapter   → Agent 14 (worktree)
+  └── Task: PaymentGateway adapter           → Agent 14 (worktree)
+
+Wave 4 (Frontend — parallel, depends on Wave 2):
+  ├── Task: Auth pages + state               → Agent 15 (worktree)
+  ├── Task: Product catalog pages            → Agent 15 (worktree)
+  └── Task: Checkout flow                    → Agent 16 (worktree)
+```
+
+### Wave Completion Protocol
+- All tasks in a wave must pass their verification criteria before next wave starts
+- Failed tasks block only dependent waves, not independent ones
+- Backlog Manager tracks wave progress and reports to Orchestrator
+
+## Git Strategy
+
+Follow the project's configured git strategy (see `.vantage/config.yml`):
+
+### Atomic (Default)
+- One commit per completed backlog item
+- Commit message format: `[PROJ-NNN] type: description`
+  - Types: feat, fix, refactor, test, docs, chore, security
+- Feature branch per sprint: `sprint-NNN/phase-4-implementation`
+- Squash merge to main at phase gate
+
+### Commit Rules
+1. Every commit references a backlog item ID
+2. Commits are atomic and revertible (one logical change per commit)
+3. No commits with failing tests
+4. Security-sensitive commits require Agent 08 review before push
+5. Worktree branches merge to sprint branch via squash merge
+
+### Branch Naming
+- Sprint branches: `sprint-NNN/phase-N-name`
+- Worktree branches: `sprint-NNN/agent-NN-task-description`
+- Release branches: `release/vN.N.N`
+
 ## Artifacts
 
 - Source code (domain, services, adapters, frontend, UI components)
@@ -83,6 +145,15 @@ Activate these agents for this phase:
 - [ ] No Security Architect veto (Agent 08 approval for auth/crypto implementation)
 - [ ] Backlog refine tasks for Phase 5
 
+## Context Strategy
+
+- CRITICAL: Each implementation subagent MUST get a fresh session with clean context
+- Include only: agent prompt, memory, relevant specs (OpenAPI, ERD), security requirements, and task description
+- Domain Logic agent gets the leanest context (specs + requirements only, no infrastructure details)
+- Each worktree subagent works independently; results merged at Orchestrator level
+- If a single agent task exceeds 50K tokens, split into smaller domain-bounded subtasks
+- Innovation Scout gets minimal context: just the specific question + technology constraints
+
 ## Token Budget
 
 Estimated: 50-80K tokens
@@ -97,3 +168,12 @@ After phase completion, graduate learnings:
 - Frontend state management decisions → persistent memory
 - UI component patterns and accessibility solutions → persistent memory
 - Library evaluations and quirks → update evaluations.md
+
+## Reassessment
+
+After gate approval:
+1. Orchestrator + Product Owner review QA and Operations phases
+2. Identify areas needing extra testing based on implementation complexity
+3. Flag any deferred technical debt for future sprints
+4. Update velocity data and re-estimate remaining phases
+5. Update PROJECT-STATE.md with implementation outcomes

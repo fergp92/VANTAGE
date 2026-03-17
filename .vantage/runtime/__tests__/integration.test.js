@@ -12,14 +12,14 @@ import { shouldRun, audit } from '../maintenance.js';
 const EVAL_FILE = path.join(import.meta.dirname, '../../memory/evaluations.md');
 const EVAL_BACKUP = EVAL_FILE + '.integration.bak';
 
-describe('USDAF v2.0 Integration', () => {
+describe('VANTAGE v2.0 Integration', () => {
   const TEST_AGENT = 'integration-test-agent';
   const TEST_FILE = path.join(import.meta.dirname, '../../memory/agents', `${TEST_AGENT}.md`);
 
   beforeEach(() => {
     // Isolate evaluations.md — backup original
     if (fs.existsSync(EVAL_FILE)) fs.copyFileSync(EVAL_FILE, EVAL_BACKUP);
-    fs.writeFileSync(EVAL_FILE, '# USDAF Evaluation Cache\n\n', 'utf-8');
+    fs.writeFileSync(EVAL_FILE, '# VANTAGE Evaluation Cache\n\n', 'utf-8');
   });
 
   afterEach(() => {

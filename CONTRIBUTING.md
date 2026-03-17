@@ -1,4 +1,4 @@
-# Contributing to USDAF
+# Contributing to VANTAGE
 
 Thank you for your interest in improving the Unified Spec-Driven Agile Framework.
 
@@ -17,7 +17,7 @@ New agents must:
 
 1. Follow the numbering convention (`agents/NN-agent-name.md`)
 2. Include these sections:
-   - **Layer** — Which USDAF layer (Governance, Architecture, Security, Implementation, Quality, Operations, META, Agile)
+   - **Layer** — Which VANTAGE layer (Governance, Architecture, Security, Implementation, Quality, Operations, META, Agile)
    - **Role** — One-line description
    - **TOGAF Phase** — Which ADM phase(s) this agent operates in
    - **Clean Architecture** — Where this agent sits in the dependency graph
@@ -48,7 +48,7 @@ When updating `docs/agent-certification-map.md`:
 ```markdown
 # Agent NN: Agent Name
 
-**Layer:** [USDAF Layer]
+**Layer:** [VANTAGE Layer]
 **Role:** [One-line role description]
 **TOGAF Phase:** [Phase letter(s) or "Cross-cutting"]
 **Clean Architecture:** [Layer position]

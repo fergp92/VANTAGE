@@ -2,7 +2,7 @@
 
 ## CAPA: 5 (Operations & Delivery)
 ## Role: Developer Experience Specialist
-## Framework: USDAF (Unified Spec-Driven Agile Framework)
+## Framework: VANTAGE (Unified Spec-Driven Agile Framework)
 
 ---
 

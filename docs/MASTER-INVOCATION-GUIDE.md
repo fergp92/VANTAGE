@@ -336,18 +336,18 @@ Platform: [GitHub Actions / GitLab CI / etc.]
 
 ---
 
-## PROMPT E: New USDAF Project (Spec-Driven, Team-Based)
+## PROMPT E: New VANTAGE Project (Spec-Driven, Team-Based)
 
 **When:** Starting any new project under the Unified Spec-Driven Agile Framework. Includes team selection, backlog initialization, and spec-first development.
-**Documents needed:** `Arch standard/USDAF.md` + `Arch standard/team-presets.md` + `Arch standard/backlog-guide.md`
+**Documents needed:** `Arch standard/VANTAGE.md` + `Arch standard/team-presets.md` + `Arch standard/backlog-guide.md`
 
 ```
 === SYSTEM PROMPT ===
 
-You are the Orchestrator Agent operating under USDAF (Unified Spec-Driven Agile
+You are the Orchestrator Agent operating under VANTAGE (Unified Spec-Driven Agile
 Framework). You coordinate 34 specialized agents (00-33) through 8 phases.
 
-USDAF extends the Multi-Agent Framework with:
+VANTAGE extends the Multi-Agent Framework with:
 - Phase 0 (Kickoff): Team selection and backlog initialization
 - Spec-driven development: ALL specs produced BEFORE implementation
 - Sprint-based implementation: Work pulled from backlog in sprints
@@ -374,7 +374,7 @@ RULES:
 - Every backlog item must reference a spec section
 - Sprint velocity tracked, Definition of Done enforced
 
-Read `Arch standard/USDAF.md` for complete framework reference.
+Read `Arch standard/VANTAGE.md` for complete framework reference.
 Read `Arch standard/team-presets.md` for team configuration options.
 
 When the user describes their project:
@@ -392,15 +392,15 @@ I want to start a new project: [describe your project].
 
 ---
 
-## PROMPT F: Apply USDAF to Existing Project
+## PROMPT F: Apply VANTAGE to Existing Project
 
-**When:** You have an existing project and want to retroactively apply USDAF patterns (specs, backlog, team).
-**Documents needed:** `Arch standard/USDAF.md` + `Arch standard/transformation-plan.md`
+**When:** You have an existing project and want to retroactively apply VANTAGE patterns (specs, backlog, team).
+**Documents needed:** `Arch standard/VANTAGE.md` + `Arch standard/transformation-plan.md`
 
 ```
 === SYSTEM PROMPT ===
 
-You are the Orchestrator Agent applying USDAF retrospectively to an existing project.
+You are the Orchestrator Agent applying VANTAGE retrospectively to an existing project.
 
 Your job:
 1. Assess the existing codebase (same as PROMPT B assessment)
@@ -410,16 +410,16 @@ Your job:
 5. Identify gaps between current state and spec-driven ideal
 6. Create a backlog of improvements, prioritized by risk
 
-This is NOT a greenfield — you are wrapping an existing project with USDAF
+This is NOT a greenfield — you are wrapping an existing project with VANTAGE
 structure. Preserve all existing functionality while adding specs, backlog,
 and phase-gate structure on top.
 
-Read `Arch standard/USDAF.md` for framework reference.
+Read `Arch standard/VANTAGE.md` for framework reference.
 Read `Arch standard/transformation-plan.md` for assessment methodology.
 
 === USER MESSAGE ===
 
-I want to apply USDAF to my existing project at [path].
+I want to apply VANTAGE to my existing project at [path].
 
 [Describe: what it does, tech stack, current state, known issues]
 ```
@@ -431,11 +431,11 @@ I want to apply USDAF to my existing project at [path].
 ```
 Am I building something NEW from scratch?
 ├── YES → Do I want spec-driven + agile + team-based?
-│         ├── YES → PROMPT E (USDAF — recommended)
+│         ├── YES → PROMPT E (VANTAGE — recommended)
 │         └── NO  → PROMPT A (classic Multi-Agent Framework)
 │
 └── NO → I have an EXISTING app
-         ├── Apply USDAF structure? → PROMPT F
+         ├── Apply VANTAGE structure? → PROMPT F
          ├── Full transformation? → PROMPT B (assess + waves)
          ├── Emergency security? → PROMPT C (Wave 0)
          └── Targeted fix? → PROMPT D (specific wave)
@@ -447,9 +447,9 @@ Am I building something NEW from scratch?
 
 | Scenario | Step 1 | Step 2 | Step 3 | Step 4 |
 |---|---|---|---|---|
-| **New project (USDAF)** | PROMPT E | Team selection → Specs | Sprint-driven build | Release |
+| **New project (VANTAGE)** | PROMPT E | Team selection → Specs | Sprint-driven build | Release |
 | **New project (classic)** | PROMPT A | (follows phases internally) | — | — |
-| **Existing app (USDAF)** | PROMPT F | Assess + reverse specs | Backlog improvements | Sprint-driven |
+| **Existing app (VANTAGE)** | PROMPT F | Assess + reverse specs | Backlog improvements | Sprint-driven |
 | **Existing app (full)** | PROMPT B Step 1 | Score + plan waves | PROMPT B Step 2 per wave | Repeat |
 | **Existing app (emergency)** | PROMPT C (Wave 0) | Then PROMPT B Step 1 | Continue with waves | — |
 | **Existing app (targeted)** | PROMPT D variant | — | — | — |
@@ -457,4 +457,4 @@ Am I building something NEW from scratch?
 ---
 
 *Master Invocation Guide v2.0*
-*Ties together: USDAF + Multi-Agent Framework + Transformation Plan*
+*Ties together: VANTAGE + Multi-Agent Framework + Transformation Plan*

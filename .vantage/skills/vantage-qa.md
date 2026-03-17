@@ -1,9 +1,9 @@
 ---
-name: usdaf-qa
-description: "USDAF Phase 5: QA — test strategy, integration tests, code review, SAST scan"
+name: vantage-qa
+description: "VANTAGE Phase 5: QA — test strategy, integration tests, code review, SAST scan"
 ---
 
-# USDAF QA Phase
+# VANTAGE QA Phase
 
 ## Agents
 
@@ -71,6 +71,14 @@ Activate these agents for this phase:
 - [ ] Rework issues resolved or scheduled for backlog
 - [ ] All tests documented and repeatable
 
+## Context Strategy
+
+- Test Architect gets: requirements.md, implementation file list, coverage goals
+- Test Implementation gets: test strategy, API contracts, relevant source files (NOT full codebase)
+- Code Review gets: diff/changed files only, architecture spec for compliance checking
+- SAST agent gets: full source paths but processes files incrementally, not all at once
+- Keep review findings in structured format (not prose) to minimize context consumption
+
 ## Token Budget
 
 Estimated: 25-40K tokens
@@ -84,3 +92,11 @@ After phase completion, graduate learnings:
 - SAST false positive patterns → SAST suppression rules
 - Testing tools and library insights → evaluations.md
 - Performance bottlenecks identified → persistent memory for optimization phase
+
+## Reassessment
+
+After gate approval:
+1. Review remaining Operations phase scope
+2. Identify documentation gaps based on QA findings
+3. Flag performance issues for Operations phase attention
+4. Update PROJECT-STATE.md with QA outcomes and coverage metrics
