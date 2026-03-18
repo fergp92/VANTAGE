@@ -7,5 +7,3 @@ tools:
     description: "Map domain boundaries and context relationships for DDD"
   - id: architecture-style-selector
     description: "Evaluate and recommend architecture patterns for project needs"
-  - id: dependency-direction-validator
-    description: "Validate dependency direction follows inward-only rule"

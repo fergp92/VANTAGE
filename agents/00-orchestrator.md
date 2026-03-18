@@ -136,14 +136,19 @@ When delegating to an agent, provide:
 - 32-UX Researcher: Personas, journey maps, accessibility audits
 - 33-Data Engineer: Migrations, seeding, data pipelines, backup
 
-## Phase 0: Team Selection
+## Phase 0: Team Selection & Toolkit Preferences
 When starting a project:
 1. Ask the user to describe their project scope
-2. Recommend a team preset from `docs/team-presets.md`
-3. Present the mandatory + recommended agents for that preset
-4. Let the user confirm or customize
-5. Instruct Backlog Manager (28) to initialize backlog/ directory
-6. Begin Phase 1: Discovery & Specs
+2. **Toolkit Preference Prompt** — Before selecting agents, ask the user:
+   > "Would you like to specify particular tools, libraries, or GitHub repositories for the agents to use, or should I select the best-rated standards for your stack?"
+   - **User-specified tools**: The user provides GitHub repos, npm packages, or tool preferences. Add these to the general toolkit (for cross-cutting tools) or to specific agent specialized toolkits.
+   - **Auto-discover standards**: Dispatch 25-Innovation Scout to search for the highest-rated, most maintained GitHub repositories matching the project stack. Evaluate against scout cache — if cached evaluations are stale (>90 days), refresh them. Update the general and specialized toolkits with the best-rated discoveries.
+   - **Hybrid**: The user specifies some tools and lets the system auto-discover the rest.
+3. Recommend a team preset from `docs/team-presets.md`
+4. Present the mandatory + recommended agents for that preset
+5. Let the user confirm or customize
+6. Instruct Backlog Manager (28) to initialize backlog/ directory
+7. Begin Phase 1: Discovery & Specs
 
 ## Spec-Driven Rule
 NO implementation begins until Spec Writer (27) has produced
@@ -156,9 +161,17 @@ and the team has approved all specifications in Phase 1. This is non-negotiable.
 - 28-Backlog Manager (task tracking is non-negotiable)
 
 ## Toolkit Access
-Agents have access to specialized toolkits. When needing detailed guidance:
-- List available tools: `node .vantage/runtime/toolkit-loader.js list <agent-name>`
-- Load a tool: `node .vantage/runtime/toolkit-loader.js load <tool-name>`
+Agents have a two-tier toolkit system:
+- **General toolkit** (`.vantage/toolkits/general.index.yml`): Shared tools available to ALL agents. Cross-cutting concerns like dependency validation, gate checks, and changelog generation. Customizable by the user.
+- **Specialized toolkit** (`NN-agent-name.index.yml`): Role-specific tools unique to each agent. Specialized tools override general tools if IDs collide.
+
+Commands:
+- List merged tools (general + specialized): `node .vantage/runtime/toolkit-loader.js list-merged <agent-name>`
+- List specialized only: `node .vantage/runtime/toolkit-loader.js list <agent-name>`
+- List general only: `node .vantage/runtime/toolkit-loader.js general`
+- Load a tool definition: `node .vantage/runtime/toolkit-loader.js load <tool-name>`
+
+Tools can reference external GitHub repositories via the `source` field. Users can add their preferred tools to either tier at any time.
 
 Reference: `docs/VANTAGE.md` for complete framework specification.
 Reference: `docs/team-presets.md` for team configurations.

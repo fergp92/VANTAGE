@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { load as loadMemory } from './memory-manager.js';
-import { loadIndex } from './toolkit-loader.js';
+import { loadIndex, loadMergedIndex } from './toolkit-loader.js';
 import { sanitizeId } from './utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -24,7 +24,7 @@ export function loadAgent(agentId, projectConfig = {}) {
   const prompt = agentFile ? fs.readFileSync(agentFile, 'utf-8') : '';
   const memoryBudget = projectConfig?.memory?.injection_budget || 500;
   const memory = loadMemory(agentId, memoryBudget);
-  const toolkitIndex = loadIndex(agentId);
+  const toolkitIndex = loadMergedIndex(agentId);
   const numericId = agentId.split('-')[0];
   const isMainAgent = MAIN_AGENTS.includes(numericId);
 
@@ -142,7 +142,7 @@ export function buildPrompt(agentId, task, context = {}, projectConfig = {}, opt
 
   if (agent.toolkitIndex) {
     blocks.push({
-      text: `## Available Tools\n\n\`\`\`yaml\n${agent.toolkitIndex}\`\`\`\n\nTo use a tool, describe which tool you want and why. The orchestrator will load its full definition.`,
+      text: `## Available Tools\n\nYour toolkit has two tiers: **general tools** (shared across all agents) and **specialized tools** (unique to your role). Specialized tools take precedence if IDs overlap.\n\n\`\`\`yaml\n${agent.toolkitIndex}\`\`\`\n\nTo use a tool, describe which tool you want and why. The orchestrator will load its full definition.`,
       cache_control: { type: 'ephemeral' },
     });
   }

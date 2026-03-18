@@ -37,6 +37,12 @@ prompt_cache:
   cache_toolkit_indices: true # Cache toolkit indices across dispatches
   cache_project_context: true # Cache project stack and specs within session
 
+toolkit:
+  general_index: general           # Shared toolkit index applied to all agents
+  merge_strategy: specialized-wins # 'specialized-wins' (default) or 'general-wins'
+  prompt_on_start: true            # Ask user about toolkit preferences at project start
+  auto_discover: true              # Auto-discover best-rated GitHub repos for standards
+
 ceremony:
   default: standard
   levels:

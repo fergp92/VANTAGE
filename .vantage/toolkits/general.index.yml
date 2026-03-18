@@ -1,0 +1,25 @@
+# General Toolkit — shared across ALL agents
+# These tools are available to every agent in addition to their specialized toolkit.
+# Customize this file to add tools that should be universally accessible.
+#
+# How it works:
+#   toolkit-loader merges general + specialized tools at load time.
+#   Specialized tools take precedence if IDs collide.
+#
+# To add a tool:
+#   1. Add an entry below with id + description (+ optional source for external repos)
+#   2. Create the tool definition in .vantage/toolkits/tools/{id}.tool.yml
+#
+# To add an external toolkit repo:
+#   Add a source field pointing to the GitHub repository URL.
+
+verified_date: "2026-03-18"
+tools:
+  - id: gate-validator
+    description: "Validate phase gate criteria before progression to next VANTAGE phase"
+  - id: dependency-direction-validator
+    description: "Verify Clean Architecture dependency rules — dependencies must point inward only"
+  - id: changelog-template
+    description: "Generate structured changelog entries following Keep a Changelog format"
+  - id: github-search
+    description: "Search GitHub repositories, issues, and code for reference implementations"
