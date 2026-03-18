@@ -3,8 +3,6 @@ verified_date: "2026-03-17"
 tools:
   - id: phase-checklist
     description: "Generate phase-specific checklist with required deliverables"
-  - id: gate-validator
-    description: "Validate phase gate criteria before advancing to next phase"
   - id: progress-tracker
     description: "Track task completion and blockers across active phase"
   - id: team-roster

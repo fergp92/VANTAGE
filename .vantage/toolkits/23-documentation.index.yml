@@ -7,5 +7,3 @@ tools:
     description: "Generate API documentation from OpenAPI spec or code comments"
   - id: diagram-generator
     description: "Create architecture and sequence diagrams in Mermaid format"
-  - id: changelog-template
-    description: "Generate changelog entries following Keep a Changelog format"

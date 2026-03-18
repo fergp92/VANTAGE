@@ -7,5 +7,3 @@ tools:
     description: "Select ceremony level based on task complexity"
   - id: session-status
     description: "Check active session state and agent dispatch history"
-  - id: gate-validator
-    description: "Validate phase gate criteria before advancing"

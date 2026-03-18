@@ -18,7 +18,7 @@ bin/                 CLI entry point (npx vantage init)
 │   │                rag-manager, utils
 │   └── __tests__/   60+ tests (Node.js built-in test runner)
 ├── skills/          6 phase skill definitions (discovery → operations)
-├── toolkits/        34 agent indices + 24 tool definitions + 7 handoff schemas
+├── toolkits/        general.index.yml + 34 agent indices + 25 tool definitions + 7 handoff schemas
 ├── locks/           Session lock files (crash recovery)
 ├── memory/          Persistent agent memory (auto-managed, gitignored)
 └── config.yml       Project configuration (ceremony levels, git strategy, etc.)
@@ -48,7 +48,7 @@ node --test __tests__/*.test.js
 | Module | Exports | Purpose |
 |--------|---------|---------|
 | `memory-manager.js` | `load`, `appendLearning`, `graduate`, `compactIfNeeded` | Persistent agent memory with graduation rules |
-| `toolkit-loader.js` | `loadIndex`, `loadTool`, `listTools` | Two-level YAML toolkit loading |
+| `toolkit-loader.js` | `loadIndex`, `loadGeneralIndex`, `loadTool`, `listTools`, `listGeneralTools`, `listMergedTools`, `loadMergedIndex` | Two-tier toolkit loading (general + specialized) |
 | `token-estimator.js` | `estimate`, `formatEstimate`, `track`, `formatDashboard` | Token cost estimation + actual usage tracking |
 | `scout-service.js` | `loadCache`, `saveEvaluation`, `search` | OSS package evaluation cache |
 | `agent-registry.js` | `loadAgent`, `getTeamAgents`, `buildPrompt`, `loadSchema` | Agent loading, prompt caching, structured output schemas |
@@ -62,7 +62,8 @@ All modules have CLI interfaces guarded by `import.meta.url` checks. They can be
 ### Path Conventions
 
 - Agent prompts: `agents/NN-agent-name.md`
-- Toolkit indices: `.vantage/toolkits/NN-agent-name.index.yml`
+- General toolkit: `.vantage/toolkits/general.index.yml`
+- Specialized toolkits: `.vantage/toolkits/NN-agent-name.index.yml`
 - Tool definitions: `.vantage/toolkits/tools/tool-name.tool.yml`
 - Agent memory: `.vantage/memory/agents/agent-id.md` (gitignored)
 - Phase skills: `.vantage/skills/vantage-{phase}.md`
@@ -128,6 +129,36 @@ node .vantage/runtime/rag-manager.js index 08-security-architect
 
 # Search agent memory
 node .vantage/runtime/rag-manager.js search 08-security-architect "OWASP injection"
+```
+
+## Two-Tier Toolkit System
+
+Agents have access to tools through a two-tier system, fully customizable by users:
+
+### General Toolkit (`.vantage/toolkits/general.index.yml`)
+Shared tools available to ALL 34 agents. Contains cross-cutting tools like dependency validation, gate checks, and changelog generation. Users can add any tool or GitHub repository here to make it available framework-wide.
+
+### Specialized Toolkit (`NN-agent-name.index.yml`)
+Role-specific tools unique to each agent. These override general tools if IDs collide. Users can add agent-specific tools (including external GitHub repos via the `source` field).
+
+### Toolkit Preference Prompt
+At project start (Phase 0), the Orchestrator asks users:
+> "Would you like to specify particular tools/repos, or should I select the best-rated standards for your stack?"
+
+Three modes:
+- **User-specified**: User provides GitHub repos, npm packages, or tool preferences
+- **Auto-discover**: Innovation Scout searches for highest-rated repos matching the project stack, refreshing stale cache entries (>90 days)
+- **Hybrid**: User specifies some, system discovers the rest
+
+```bash
+# List merged tools (general + specialized) for an agent
+node .vantage/runtime/toolkit-loader.js list-merged 16-ui-builder
+
+# List general toolkit only
+node .vantage/runtime/toolkit-loader.js general
+
+# View merged YAML index
+node .vantage/runtime/toolkit-loader.js merged 08-security-architect
 ```
 
 ## Development Framework
