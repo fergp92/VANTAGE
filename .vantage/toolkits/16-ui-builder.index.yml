@@ -9,3 +9,6 @@ tools:
     description: "Map design tokens to component styles and theme variables"
   - id: form-builder
     description: "Scaffold form components with validation and error handling"
+  - id: ui-ux-pro-max-skill
+    description: "AI-powered design intelligence toolkit with 161 industry-specific rules, 67 UI styles, 161 color palettes, 57 font pairings, and 99 UX guidelines"
+    source: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"

@@ -1,0 +1,66 @@
+id: ui-ux-pro-max-skill
+description: "AI-powered design intelligence toolkit with 161 industry-specific rules, 67 UI styles, 161 color palettes, 57 font pairings, 25 chart types, 13 tech stacks, and 99 UX guidelines"
+when_to_use: "When generating design systems, selecting UI styles, choosing color palettes, font pairings, chart types, or applying industry-specific UX reasoning (agent 16)"
+source: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
+input:
+  - name: industry
+    type: string
+    required: true
+    description: "Industry category (e.g., SaaS, fintech, healthcare, e-commerce, beauty services — 161 categories supported)"
+  - name: tech_stack
+    type: string
+    required: false
+    description: "Target tech stack: React, Next.js, Vue, Nuxt, Svelte, SwiftUI, React Native, Flutter, HTML+Tailwind, shadcn/ui, etc."
+  - name: ui_style
+    type: string
+    required: false
+    description: "Preferred UI style (e.g., Glassmorphism, Neumorphism, Brutalism, Bento Grid, Dark Mode, AI-Native UI, Claymorphism — 67 styles available)"
+  - name: search_domain
+    type: string
+    required: false
+    description: "Filter search by domain: style, typography, chart_type, stack, or all"
+template: |
+  ## Design System Generation: {{industry}}
+  **Tech Stack:** {{tech_stack}} | **UI Style:** {{ui_style}}
+
+  ### Multi-Domain Search
+  Execute simultaneous searches across five categories:
+  1. **UI Styles** — Match {{ui_style}} or recommend based on {{industry}}
+  2. **Color Palettes** — Industry-aligned color psychology for {{industry}}
+  3. **Typography** — Font pairings matching mood and readability needs
+  4. **Chart Types** — Dashboard and analytics recommendations
+  5. **UX Guidelines** — Industry-specific best practices and accessibility rules
+
+  ### Industry-Specific Reasoning
+  Apply reasoning rules for **{{industry}}**:
+  - Pattern recommendations with rationale
+  - Color psychology alignment
+  - Typography mood matching
+  - Key effects and micro-interactions
+  - Anti-pattern filtering
+
+  ### Design System Output
+  | Section | Details |
+  |---------|---------|
+  | Industry | {{industry}} |
+  | UI Style | {{ui_style}} |
+  | Color Palette | [primary, secondary, accent, neutral, semantic] |
+  | Font Pairing | [heading font + body font from 57 curated pairs] |
+  | Chart Types | [recommended chart types for data visualization] |
+  | Key Effects | [shadows, gradients, animations, transitions] |
+  | Tech Stack | {{tech_stack}} |
+
+  ### Pre-Delivery Checklist
+  - [ ] Design tokens generated for target stack
+  - [ ] Color contrast ratios meet WCAG 2.1 AA
+  - [ ] Font loading strategy defined (font-display: swap)
+  - [ ] Responsive breakpoints specified
+  - [ ] Dark mode palette variant included
+  - [ ] Motion preferences respected (prefers-reduced-motion)
+  - [ ] Industry anti-patterns reviewed and excluded
+
+  ### Hierarchical Storage
+  - Master design system file for project-wide consistency
+  - Page-specific overrides where needed
+  - Cross-session persistence for design decisions
+output: "design-system-[industry].md artifact with complete design system specification"
