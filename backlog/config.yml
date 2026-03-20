@@ -1,0 +1,44 @@
+project_name: "LinguaForge"
+description: "AI-Powered Cross-Linguistic Learning Framework"
+framework: VANTAGE
+ceremony_level: full
+
+team:
+  core: [00, 08, 27, 28]
+  active: [00, 02, 04, 05, 08, 12, 13, 14, 15, 16, 17, 27, 28, 32]
+
+tech_stack:
+  runtime: "Node.js 20 LTS"
+  language: "TypeScript 5.x"
+  framework: "Next.js 14 (App Router)"
+  database: "PostgreSQL 16 + pgvector"
+  cache: "Redis 7"
+  orm: "Drizzle ORM"
+  api: "tRPC + REST fallback"
+  auth: "NextAuth.js v5 (OAuth 2.1)"
+  ai: "Claude API (pattern analysis + mnemonic generation)"
+  testing: "Vitest + Playwright"
+  mobile: "React Native (Expo)"
+
+statuses: [Backlog, To Do, In Progress, In Review, Done]
+phases: [0-kickoff, 1-discovery, 2-architecture, 3-security, 4-implementation, 5-qa, 6-operations, 7-governance]
+
+definition_of_done:
+  - Spec reference validated
+  - Tests pass (unit + integration)
+  - Security review complete
+  - Accessibility audit (WCAG 2.1 AA)
+  - Cross-linguistic accuracy verified by native speakers
+  - Gamification balance tested
+
+sprint_length_days: 14
+
+language_pairs_v1:
+  - source: es  # Spanish
+    targets: [en, pt, fr, it, de]
+  - source: en  # English
+    targets: [es, fr, de, pt, ja, ko, zh]
+  - source: pt  # Portuguese
+    targets: [es, en, fr, it]
+  - source: fr  # French
+    targets: [en, es, de, it, pt]

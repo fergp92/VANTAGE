@@ -1,0 +1,1358 @@
+openapi: 3.1.0
+info:
+  title: LinguaForge API
+  version: 1.0.0
+  description: |
+    AI-Powered Cross-Linguistic Learning Framework API.
+    Provides endpoints for lessons, pattern analysis, gamification,
+    spaced repetition, and mnemonic generation.
+  contact:
+    name: LinguaForge Team
+
+servers:
+  - url: /api/v1
+    description: Main API
+
+tags:
+  - name: Auth
+    description: Authentication and user management
+  - name: Languages
+    description: Language pair configuration
+  - name: Lessons
+    description: Lesson delivery and completion
+  - name: Patterns
+    description: Cross-linguistic pattern engine
+  - name: Exercises
+    description: Interactive exercises
+  - name: Mnemonics
+    description: Mnemonic generation and rating
+  - name: Gamification
+    description: XP, streaks, leagues, achievements
+  - name: Review
+    description: Spaced repetition review queue
+  - name: Progress
+    description: User progress and analytics
+  - name: StudyPlan
+    description: Personalized study plans and tips
+
+paths:
+  # === AUTH ===
+  /auth/register:
+    post:
+      tags: [Auth]
+      operationId: registerUser
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      operationId: loginUser
+      summary: Login with credentials
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  # === LANGUAGES ===
+  /languages:
+    get:
+      tags: [Languages]
+      operationId: listLanguages
+      summary: List all supported languages
+      responses:
+        '200':
+          description: Available languages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Language'
+
+  /languages/pairs:
+    get:
+      tags: [Languages]
+      operationId: listLanguagePairs
+      summary: List supported language pairs with metadata
+      parameters:
+        - name: source
+          in: query
+          schema:
+            type: string
+          description: Filter by source language (ISO 639-1)
+      responses:
+        '200':
+          description: Available pairs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LanguagePair'
+
+  /users/me/language-pairs:
+    post:
+      tags: [Languages]
+      operationId: addUserLanguagePair
+      summary: Add a language pair to user's learning path
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sourceLanguage, targetLanguage]
+              properties:
+                sourceLanguage:
+                  type: string
+                  example: "es"
+                targetLanguage:
+                  type: string
+                  example: "en"
+                currentLevel:
+                  $ref: '#/components/schemas/CEFRLevel'
+      responses:
+        '201':
+          description: Language pair added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLanguagePair'
+
+  # === LESSONS ===
+  /lessons:
+    get:
+      tags: [Lessons]
+      operationId: listLessons
+      summary: List available lessons for a language pair
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pair
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Language pair (e.g., es-en)"
+        - name: level
+          in: query
+          schema:
+            $ref: '#/components/schemas/CEFRLevel'
+        - name: module
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lesson list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lessons:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LessonSummary'
+                  nextRecommended:
+                    $ref: '#/components/schemas/LessonSummary'
+
+  /lessons/{lessonId}:
+    get:
+      tags: [Lessons]
+      operationId: getLesson
+      summary: Get full lesson content with exercises
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: lessonId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Full lesson
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+
+  /lessons/{lessonId}/complete:
+    post:
+      tags: [Lessons]
+      operationId: completeLesson
+      summary: Submit lesson completion with exercise results
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: lessonId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonCompletionRequest'
+      responses:
+        '200':
+          description: Lesson results with XP and rewards
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LessonCompletionResponse'
+
+  # === PATTERNS ===
+  /patterns:
+    get:
+      tags: [Patterns]
+      operationId: listPatterns
+      summary: List cross-linguistic patterns for a language pair
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pair
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            $ref: '#/components/schemas/PatternCategory'
+        - name: difficulty
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+      responses:
+        '200':
+          description: Patterns list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pattern'
+
+  /patterns/{patternId}:
+    get:
+      tags: [Patterns]
+      operationId: getPattern
+      summary: Get detailed pattern with examples and exercises
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: patternId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pattern detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatternDetail'
+
+  /patterns/compare:
+    post:
+      tags: [Patterns]
+      operationId: compareSentences
+      summary: Analyze and compare sentence structures between L1 and L2
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sentence, sourceLanguage, targetLanguage]
+              properties:
+                sentence:
+                  type: string
+                  example: "El gato negro duerme en la casa grande"
+                sourceLanguage:
+                  type: string
+                  example: "es"
+                targetLanguage:
+                  type: string
+                  example: "en"
+      responses:
+        '200':
+          description: Structural comparison
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SentenceComparison'
+
+  # === MNEMONICS ===
+  /mnemonics:
+    get:
+      tags: [Mnemonics]
+      operationId: getMnemonics
+      summary: Get mnemonics for a word or pattern
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: word
+          in: query
+          schema:
+            type: string
+        - name: patternId
+          in: query
+          schema:
+            type: string
+        - name: pair
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Mnemonics list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Mnemonic'
+
+  /mnemonics/generate:
+    post:
+      tags: [Mnemonics]
+      operationId: generateMnemonic
+      summary: AI-generate a personalized mnemonic
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [word, targetLanguage, sourceLanguage]
+              properties:
+                word:
+                  type: string
+                targetLanguage:
+                  type: string
+                sourceLanguage:
+                  type: string
+                type:
+                  $ref: '#/components/schemas/MnemonicType'
+      responses:
+        '200':
+          description: Generated mnemonic
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mnemonic'
+
+  /mnemonics/{mnemonicId}/rate:
+    post:
+      tags: [Mnemonics]
+      operationId: rateMnemonic
+      summary: Rate a mnemonic's effectiveness
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: mnemonicId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rating]
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+      responses:
+        '200':
+          description: Rating recorded
+
+  # === GAMIFICATION ===
+  /gamification/xp:
+    get:
+      tags: [Gamification]
+      operationId: getUserXP
+      summary: Get user's XP, level, and progression
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: XP info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/XPInfo'
+
+  /gamification/streak:
+    get:
+      tags: [Gamification]
+      operationId: getUserStreak
+      summary: Get user's streak info
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Streak info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreakInfo'
+
+  /gamification/league:
+    get:
+      tags: [Gamification]
+      operationId: getUserLeague
+      summary: Get user's current league and leaderboard
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: League info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeagueInfo'
+
+  /gamification/achievements:
+    get:
+      tags: [Gamification]
+      operationId: getUserAchievements
+      summary: Get user's achievements (earned and available)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Achievements
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  earned:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Achievement'
+                  available:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Achievement'
+
+  /gamification/daily-challenges:
+    get:
+      tags: [Gamification]
+      operationId: getDailyChallenges
+      summary: Get today's daily challenges
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daily challenges
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DailyChallenge'
+
+  # === REVIEW (Spaced Repetition) ===
+  /review/queue:
+    get:
+      tags: [Review]
+      operationId: getReviewQueue
+      summary: Get cards due for review
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pair
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Review cards
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cards:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReviewCard'
+                  totalDue:
+                    type: integer
+
+  /review/submit:
+    post:
+      tags: [Review]
+      operationId: submitReview
+      summary: Submit review card results
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cardId, score]
+              properties:
+                cardId:
+                  type: string
+                score:
+                  type: integer
+                  minimum: 0
+                  maximum: 5
+                  description: "0=blackout, 1=wrong+recognized, 2=wrong+familiar, 3=hard, 4=good, 5=perfect"
+      responses:
+        '200':
+          description: Next review scheduled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nextReviewAt:
+                    type: string
+                    format: date-time
+                  newInterval:
+                    type: number
+                    description: Days until next review
+
+  # === PROGRESS ===
+  /progress:
+    get:
+      tags: [Progress]
+      operationId: getUserProgress
+      summary: Get comprehensive progress for a language pair
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pair
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Progress data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProgress'
+
+  /progress/patterns:
+    get:
+      tags: [Progress]
+      operationId: getPatternMastery
+      summary: Get mastery levels for all patterns
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pair
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pattern mastery map
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PatternMastery'
+
+  /progress/errors:
+    get:
+      tags: [Progress]
+      operationId: getErrorPatterns
+      summary: Get user's error pattern analysis
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pair
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Error analysis
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorPattern'
+
+  # === STUDY PLAN ===
+  /study-plan:
+    get:
+      tags: [StudyPlan]
+      operationId: getStudyPlan
+      summary: Get personalized study plan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pair
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Study plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyPlan'
+
+  /study-plan/tips:
+    get:
+      tags: [StudyPlan]
+      operationId: getStudyTips
+      summary: Get contextual study tips based on recent performance
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pair
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Study tips
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudyTip'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # --- Auth ---
+    RegisterRequest:
+      type: object
+      required: [email, password, nativeLanguage]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        displayName:
+          type: string
+        nativeLanguage:
+          type: string
+          description: ISO 639-1
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            email:
+              type: string
+            displayName:
+              type: string
+            nativeLanguage:
+              type: string
+
+    # --- Languages ---
+    Language:
+      type: object
+      properties:
+        code:
+          type: string
+          description: ISO 639-1
+        name:
+          type: string
+        nativeName:
+          type: string
+        family:
+          type: string
+
+    LanguagePair:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        familyRelation:
+          type: string
+          enum: [same_family, distant, unrelated]
+        difficultyCoefficient:
+          type: number
+        sharedRoots:
+          type: number
+          description: Percentage of cognates
+        supportLevel:
+          type: string
+          enum: [full, beta, planned]
+
+    UserLanguagePair:
+      type: object
+      properties:
+        id:
+          type: string
+        pair:
+          $ref: '#/components/schemas/LanguagePair'
+        currentLevel:
+          $ref: '#/components/schemas/CEFRLevel'
+        startedAt:
+          type: string
+          format: date-time
+
+    CEFRLevel:
+      type: string
+      enum: [A1, A2, B1, B2, C1, C2]
+
+    # --- Lessons ---
+    LessonSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        module:
+          type: string
+        level:
+          $ref: '#/components/schemas/CEFRLevel'
+        estimatedMinutes:
+          type: integer
+        xpReward:
+          type: integer
+        completed:
+          type: boolean
+        patternCount:
+          type: integer
+        exerciseCount:
+          type: integer
+
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        module:
+          type: string
+        level:
+          $ref: '#/components/schemas/CEFRLevel'
+        objectives:
+          type: array
+          items:
+            type: string
+        patterns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pattern'
+        vocabulary:
+          type: array
+          items:
+            $ref: '#/components/schemas/VocabularyItem'
+        exercises:
+          type: array
+          items:
+            $ref: '#/components/schemas/Exercise'
+        tips:
+          type: array
+          items:
+            type: string
+        estimatedMinutes:
+          type: integer
+        xpReward:
+          type: integer
+
+    LessonCompletionRequest:
+      type: object
+      required: [exerciseResults]
+      properties:
+        exerciseResults:
+          type: array
+          items:
+            type: object
+            required: [exerciseId, correct, timeSeconds]
+            properties:
+              exerciseId:
+                type: string
+              correct:
+                type: boolean
+              answer:
+                type: string
+              timeSeconds:
+                type: number
+              hintsUsed:
+                type: integer
+
+    LessonCompletionResponse:
+      type: object
+      properties:
+        xpEarned:
+          type: integer
+        bonuses:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              xp:
+                type: integer
+        accuracy:
+          type: number
+        patternsProgressed:
+          type: array
+          items:
+            type: object
+            properties:
+              patternId:
+                type: string
+              oldLevel:
+                type: string
+              newLevel:
+                type: string
+        newAchievements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Achievement'
+        streakExtended:
+          type: boolean
+        reviewCardsAdded:
+          type: integer
+
+    # --- Patterns ---
+    PatternCategory:
+      type: string
+      enum:
+        - word_order
+        - conjugation
+        - gender_system
+        - tense_mapping
+        - article_usage
+        - preposition
+        - phonetic
+        - cognate
+        - false_friend
+
+    Pattern:
+      type: object
+      properties:
+        id:
+          type: string
+        category:
+          $ref: '#/components/schemas/PatternCategory'
+        name:
+          type: string
+        difficulty:
+          type: integer
+          minimum: 1
+          maximum: 5
+        summary:
+          type: string
+
+    PatternDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        category:
+          $ref: '#/components/schemas/PatternCategory'
+        name:
+          type: string
+        difficulty:
+          type: integer
+        sourceStructure:
+          $ref: '#/components/schemas/SentenceStructure'
+        targetStructure:
+          $ref: '#/components/schemas/SentenceStructure'
+        transformationRule:
+          type: object
+          properties:
+            type:
+              type: string
+            description:
+              type: string
+            exceptions:
+              type: array
+              items:
+                type: string
+        commonErrors:
+          type: array
+          items:
+            type: string
+        mnemonics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mnemonic'
+        examples:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatternExample'
+
+    SentenceStructure:
+      type: object
+      properties:
+        raw:
+          type: string
+        tokens:
+          type: array
+          items:
+            type: object
+            properties:
+              word:
+                type: string
+              lemma:
+                type: string
+              role:
+                type: string
+              partOfSpeech:
+                type: string
+        template:
+          type: string
+        wordOrder:
+          type: string
+        annotation:
+          type: string
+
+    SentenceComparison:
+      type: object
+      properties:
+        sourceSentence:
+          $ref: '#/components/schemas/SentenceStructure'
+        targetTranslation:
+          type: string
+        targetStructure:
+          $ref: '#/components/schemas/SentenceStructure'
+        patternsIdentified:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pattern'
+        structuralDifferences:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              description:
+                type: string
+              sourceRange:
+                type: string
+              targetRange:
+                type: string
+
+    PatternExample:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        highlightedDifference:
+          type: string
+
+    # --- Vocabulary ---
+    VocabularyItem:
+      type: object
+      properties:
+        id:
+          type: string
+        word:
+          type: string
+        translation:
+          type: string
+        pronunciation:
+          type: string
+        partOfSpeech:
+          type: string
+        cognateType:
+          type: string
+          enum: [true_cognate, false_friend, none]
+        exampleSentence:
+          type: string
+
+    # --- Exercises ---
+    Exercise:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - translation
+            - pattern_match
+            - fill_blank
+            - word_order
+            - listening
+            - speaking
+            - structure_comparison
+            - mnemonic_recall
+            - cognate_detection
+            - contextual_usage
+        difficulty:
+          type: integer
+        prompt:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        correctAnswer:
+          type: string
+        patternId:
+          type: string
+        xpValue:
+          type: integer
+        hints:
+          type: array
+          items:
+            type: string
+        timeLimit:
+          type: integer
+
+    # --- Mnemonics ---
+    MnemonicType:
+      type: string
+      enum:
+        - cognate_bridge
+        - phonetic_link
+        - visual_association
+        - story_hook
+        - false_friend_alert
+        - grammar_rhyme
+        - acronym
+        - cultural_bridge
+
+    Mnemonic:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/MnemonicType'
+        targetWord:
+          type: string
+        content:
+          type: string
+        explanation:
+          type: string
+        effectiveness:
+          type: number
+        userRating:
+          type: integer
+          minimum: 1
+          maximum: 5
+
+    # --- Gamification ---
+    XPInfo:
+      type: object
+      properties:
+        currentXP:
+          type: integer
+        totalXP:
+          type: integer
+        level:
+          type: integer
+        levelName:
+          type: string
+        xpToNextLevel:
+          type: integer
+        xpProgress:
+          type: number
+          description: 0-1 progress to next level
+
+    StreakInfo:
+      type: object
+      properties:
+        currentStreak:
+          type: integer
+        longestStreak:
+          type: integer
+        todayCompleted:
+          type: boolean
+        streakShields:
+          type: integer
+        nextMilestone:
+          type: integer
+        streakFreezeActive:
+          type: boolean
+
+    LeagueInfo:
+      type: object
+      properties:
+        tier:
+          type: string
+          enum: [Bronze, Silver, Gold, Sapphire, Ruby, Obsidian, Diamond]
+        rank:
+          type: integer
+        weeklyXP:
+          type: integer
+        leaderboard:
+          type: array
+          items:
+            type: object
+            properties:
+              rank:
+                type: integer
+              displayName:
+                type: string
+              weeklyXP:
+                type: integer
+              isCurrentUser:
+                type: boolean
+        promotionZone:
+          type: boolean
+        demotionZone:
+          type: boolean
+
+    Achievement:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        rarity:
+          type: string
+          enum: [common, uncommon, rare, epic, legendary]
+        xpReward:
+          type: integer
+        earnedAt:
+          type: string
+          format: date-time
+        progress:
+          type: number
+          description: 0-1 progress toward earning
+
+    DailyChallenge:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        reward:
+          type: integer
+        completed:
+          type: boolean
+        expiresAt:
+          type: string
+          format: date-time
+
+    # --- Review ---
+    ReviewCard:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [vocabulary, pattern, grammar_rule, false_friend]
+        front:
+          type: string
+        back:
+          type: string
+        hint:
+          type: string
+        crossLinguisticWeight:
+          type: number
+        interval:
+          type: number
+        repetitions:
+          type: integer
+        easinessFactor:
+          type: number
+
+    # --- Progress ---
+    UserProgress:
+      type: object
+      properties:
+        pair:
+          type: string
+        currentLevel:
+          $ref: '#/components/schemas/CEFRLevel'
+        lessonsCompleted:
+          type: integer
+        exercisesCompleted:
+          type: integer
+        accuracy:
+          type: number
+        studyTimeMinutes:
+          type: integer
+        patternsIntroduced:
+          type: integer
+        patternsMastered:
+          type: integer
+        vocabularyLearned:
+          type: integer
+        strongCategories:
+          type: array
+          items:
+            type: string
+        weakCategories:
+          type: array
+          items:
+            type: string
+
+    PatternMastery:
+      type: object
+      properties:
+        patternId:
+          type: string
+        patternName:
+          type: string
+        category:
+          $ref: '#/components/schemas/PatternCategory'
+        masteryLevel:
+          type: string
+          enum: [unseen, introduced, practicing, familiar, mastered]
+        accuracy:
+          type: number
+        lastPracticed:
+          type: string
+          format: date-time
+
+    ErrorPattern:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/PatternCategory'
+        errorCount:
+          type: integer
+        recentErrors:
+          type: array
+          items:
+            type: object
+            properties:
+              exerciseType:
+                type: string
+              expected:
+                type: string
+              userAnswer:
+                type: string
+              timestamp:
+                type: string
+                format: date-time
+        suggestedRemediation:
+          type: string
+
+    # --- Study Plan ---
+    StudyPlan:
+      type: object
+      properties:
+        dailyGoalMinutes:
+          type: integer
+        todaysPlan:
+          type: array
+          items:
+            type: object
+            properties:
+              activity:
+                type: string
+              duration:
+                type: integer
+              focus:
+                type: string
+              completed:
+                type: boolean
+        weeklySchedule:
+          type: object
+          additionalProperties:
+            type: string
+
+    StudyTip:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [before_lesson, during_exercise, after_lesson, study_habit, error_based]
+        content:
+          type: string
+        relevance:
+          type: number
+          description: 0-1 relevance score to current user state
