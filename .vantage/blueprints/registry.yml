@@ -1,0 +1,35 @@
+# VANTAGE v2.1 — Blueprint Registry
+# Available project scaffolds for `usdaf init --blueprint <name>`
+
+blueprints:
+  rest-api:
+    name: REST API
+    description: Backend API with Fastify, PostgreSQL, JWT auth
+    complexity: medium
+    agents: 14
+    stack: [node, fastify, postgresql, jwt]
+    preset_base: api-service
+
+  fullstack-web:
+    name: Full-Stack Web App
+    description: React + Vite frontend with API backend
+    complexity: complex
+    agents: 18
+    stack: [react, vite, tailwindcss, fastify, postgresql]
+    preset_base: full-stack-app
+
+  cli-tool:
+    name: CLI Tool
+    description: Node.js command-line tool with Commander
+    complexity: simple
+    agents: 9
+    stack: [node, commander, chalk]
+    preset_base: minimum-viable
+
+  realtime-app:
+    name: Real-Time Application
+    description: WebSocket + Redis real-time app with React UI
+    complexity: complex
+    agents: 17
+    stack: [react, fastify, ws, redis, postgresql]
+    preset_base: full-stack-app

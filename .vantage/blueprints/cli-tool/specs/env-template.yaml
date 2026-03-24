@@ -1,0 +1,13 @@
+# {{PROJECT_NAME}} — Environment Variables
+# Blueprint: cli-tool
+# These can be set in the shell or in a .env file in the project root.
+
+# Config
+CONFIG_PATH: ~/.{{CLI_NAME}}/config.yml
+
+# Logging
+DEBUG: "false"
+LOG_LEVEL: info  # debug | info | warn | error
+
+# Output
+NO_COLOR: "false"

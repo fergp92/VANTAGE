@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "{{PROJECT_NAME}} WebSocket Events",
+  "description": "WebSocket event definitions. Server URL: ws://localhost:3000/ws?token=<jwt>",
+
+  "connection": {
+    "url": "ws://localhost:{{WS_PORT}}/ws",
+    "auth": "JWT token passed as query parameter: ?token=<accessToken>",
+    "heartbeat": {
+      "interval_ms": 30000,
+      "timeout_ms": 10000,
+      "client_sends": "ping",
+      "server_responds": "pong"
+    },
+    "reconnect": {
+      "strategy": "exponential_backoff",
+      "initial_delay_ms": 1000,
+      "max_delay_ms": 30000,
+      "max_attempts": 10
+    }
+  },
+
+  "events": {
+    "client_to_server": {
+      "room:join": {
+        "description": "Join a room to receive its messages",
+        "payload": {
+          "roomId": "uuid"
+        },
+        "response": "room:joined"
+      },
+      "room:leave": {
+        "description": "Leave a room",
+        "payload": {
+          "roomId": "uuid"
+        },
+        "response": "room:left"
+      },
+      "message:send": {
+        "description": "Send a message to a room",
+        "payload": {
+          "roomId": "uuid",
+          "content": "string",
+          "type": "text | image"
+        },
+        "response": "message:sent"
+      },
+      "typing:start": {
+        "description": "Indicate user started typing",
+        "payload": {
+          "roomId": "uuid"
+        }
+      },
+      "typing:stop": {
+        "description": "Indicate user stopped typing",
+        "payload": {
+          "roomId": "uuid"
+        }
+      },
+      "ping": {
+        "description": "Heartbeat ping",
+        "payload": {}
+      }
+    },
+
+    "server_to_client": {
+      "room:joined": {
+        "description": "Confirmation of joining a room",
+        "payload": {
+          "roomId": "uuid",
+          "members": ["array of {userId, name, isOnline}"]
+        }
+      },
+      "room:left": {
+        "description": "Confirmation of leaving a room",
+        "payload": {
+          "roomId": "uuid"
+        }
+      },
+      "message:new": {
+        "description": "New message broadcast to room members",
+        "payload": {
+          "id": "uuid",
+          "roomId": "uuid",
+          "userId": "uuid",
+          "userName": "string",
+          "content": "string",
+          "type": "text | system | image",
+          "createdAt": "ISO 8601 timestamp"
+        }
+      },
+      "message:sent": {
+        "description": "Confirmation that message was persisted",
+        "payload": {
+          "id": "uuid",
+          "roomId": "uuid",
+          "createdAt": "ISO 8601 timestamp"
+        }
+      },
+      "user:online": {
+        "description": "A user came online",
+        "payload": {
+          "userId": "uuid",
+          "userName": "string"
+        }
+      },
+      "user:offline": {
+        "description": "A user went offline",
+        "payload": {
+          "userId": "uuid",
+          "userName": "string"
+        }
+      },
+      "typing:update": {
+        "description": "Broadcast typing indicators",
+        "payload": {
+          "roomId": "uuid",
+          "users": ["array of {userId, name}"]
+        }
+      },
+      "pong": {
+        "description": "Heartbeat response",
+        "payload": {}
+      },
+      "error": {
+        "description": "Error notification",
+        "payload": {
+          "code": "string",
+          "message": "string"
+        }
+      }
+    }
+  },
+
+  "error_codes": {
+    "AUTH_REQUIRED": "No valid authentication token",
+    "AUTH_EXPIRED": "Token expired, reconnect with new token",
+    "ROOM_NOT_FOUND": "Room does not exist",
+    "ROOM_FORBIDDEN": "No access to this room",
+    "RATE_LIMITED": "Too many messages, slow down",
+    "MESSAGE_TOO_LONG": "Message exceeds max length (4096 chars)",
+    "INTERNAL_ERROR": "Server error, retry later"
+  }
+}
