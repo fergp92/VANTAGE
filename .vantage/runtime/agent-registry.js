@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { load as loadMemory } from './memory-manager.js';
 import { loadIndex, loadMergedIndex } from './toolkit-loader.js';
 import { sanitizeId } from './utils.js';
+import { getModelForAgent } from './agent-tiers.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const AGENTS_DIR = path.resolve(__dirname, '..', '..', 'agents');
@@ -28,7 +29,8 @@ export function loadAgent(agentId, projectConfig = {}) {
   const numericId = agentId.split('-')[0];
   const isMainAgent = MAIN_AGENTS.includes(numericId);
 
-  return { prompt, memory, toolkitIndex, config: { memoryBudget, isMainAgent } };
+  const model = getModelForAgent(agentId, projectConfig);
+  return { prompt, memory, toolkitIndex, model, config: { memoryBudget, isMainAgent } };
 }
 
 /**

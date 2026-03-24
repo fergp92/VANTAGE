@@ -84,3 +84,58 @@ git:
     trunk:
       description: "Continuous integration to main with feature flags"
       commit_style: conventional
+
+tiers:
+  heavy: ['01', '04', '08', '11']
+  standard: ['02', '03', '05', '06', '09', '10', '12', '13', '15', '17', '19', '20', '24', '25', '26', '27']
+  light: ['07', '14', '16', '18', '22', '23', '28', '29', '30', '31', '32', '33']
+  model_map:
+    heavy: opus
+    standard: sonnet
+    light: haiku
+
+drift:
+  check_interval: 5
+  threshold: 0.3
+  auto_pause: true
+  weights:
+    missing_ref: 0.4
+    orphaned_spec: 0.3
+    scope_creep: 0.2
+    naming: 0.1
+
+gates:
+  timeout_ms: 30000
+  hooks:
+    G0:
+      pre: [validate-spec-completeness]
+      post: [log-gate-result]
+    G3:
+      pre: [validate-spec-contracts]
+      post: [update-sprint-status, log-gate-result]
+
+patterns:
+  max_injection_tokens: 500
+  auto_capture: true
+  directory: memory/patterns
+
+fast_path:
+  enabled: true
+  transforms: [var-to-const, remove-console, sort-imports, remove-unused-imports, normalize-quotes, add-strict]
+  fallback_to_agent: true
+
+parallel:
+  enabled: true
+  max_concurrent: 4
+  isolation: worktree
+  conflict_strategy: flag
+
+providers:
+  primary: anthropic
+  fallback: [openai, google]
+  local_dev: ollama
+  routing:
+    strategy: cost
+    max_retries: 2
+    timeout_ms: 30000
+    health_check_interval_ms: 300000

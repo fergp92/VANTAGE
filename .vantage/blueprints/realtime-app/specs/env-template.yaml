@@ -1,0 +1,32 @@
+# {{PROJECT_NAME}} — Environment Variables
+# Blueprint: realtime-app
+# Copy to .env and fill in values. NEVER commit .env to version control.
+
+# Server
+PORT: 3000
+WS_PORT: 3001
+NODE_ENV: development
+LOG_LEVEL: info
+
+# Database
+DATABASE_URL: postgresql://{{DB_USER}}:{{DB_PASSWORD}}@localhost:5432/{{DB_NAME}}
+
+# Redis
+REDIS_URL: redis://localhost:6379
+
+# JWT
+JWT_SECRET: "{{GENERATE_RANDOM_SECRET_64}}"
+JWT_ACCESS_EXPIRY: 15m
+JWT_REFRESH_EXPIRY: 7d
+
+# Frontend (Vite)
+VITE_API_URL: http://localhost:3000/api
+VITE_WS_URL: ws://localhost:3001/ws
+
+# CORS
+CORS_ORIGIN: http://localhost:5173
+
+# Rate Limiting
+RATE_LIMIT_MAX: 100
+RATE_LIMIT_WINDOW_MS: 60000
+WS_MESSAGE_RATE_LIMIT: 10  # messages per second per user
