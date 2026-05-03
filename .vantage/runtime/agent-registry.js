@@ -11,8 +11,11 @@ const AGENTS_DIR = path.resolve(__dirname, '..', '..', 'agents');
 const PRESETS_FILE = path.resolve(__dirname, '..', '..', 'Arch standard', 'team-presets.md');
 
 const SCHEMAS_DIR = path.resolve(__dirname, '..', 'toolkits', 'schemas');
-const MAIN_AGENTS = ['00', '08', '24'];
-const CORE_TEAM = ['00', '08', '24', '27', '28'];
+// Main agents stay in context across the whole session (not dispatched as subagents).
+// Agent 34 (Structural Coherence) is added in v2.0 Pillar B: anti-drift auditor with
+// veto on Gate G3.5 needs continuous awareness of commits and CANONICAL.md.
+const MAIN_AGENTS = ['00', '08', '24', '34'];
+const CORE_TEAM = ['00', '08', '24', '27', '28', '34'];
 
 /**
  * Load a single agent: prompt file, memory, and toolkit index.
