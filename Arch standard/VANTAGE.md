@@ -1,23 +1,35 @@
-# VANTAGE — Unified Spec-Driven Agile Framework v1.0
+# VANTAGE — Unified Spec-Driven Agile Framework
 
 > **No code is written until specs exist and are approved. Specs are the source of truth.**
+> **No code stays in the codebase if it duplicates a canonical implementation. CANONICAL.md is the structural source of truth.**
 
 ## Overview
 
 VANTAGE merges the Multi-Agent Framework (25 agents, 7 phases, security gates) with spec-driven development and Backlog.md-style markdown-native task management into a single unified framework. Every development project passes through required phases with a project-specific agent team.
 
+VANTAGE has three layers built incrementally:
+
+- **v1.0 — Spec-Driven Foundation**: 34 agents (00-33), 8 phases, gates G-1 through G5, security veto.
+- **v2.0 — Intelligent Runtime (Pillar A)**: agent memory, subagent dispatch, adaptive toolkits, OSS scout, drift detection (spec→implementation alignment).
+- **v2.0 — Structural Defense (Pillar B)**: Agent 34 (Structural Coherence), CANONICAL.md, Forced-Context Preamble, Gate G3.5, Consolidation Sprint cadence.
+
+Pillar B is mandatory for projects starting after 2026-05-03. Existing v1.0 / v2.0-Pillar-A projects can adopt Pillar B incrementally — see `docs/superpowers/specs/2026-05-03-vantage-v2-pillar-b-structural-defense.md` for the retrofit path.
+
 ### Core Principles
 
 1. **Spec-First**: Formal specifications (OpenAPI, DB schema, wireframes, event contracts) are produced and approved BEFORE any implementation begins
-2. **Phase-Gated**: 8 phases (0-7) with explicit gates; no phase proceeds without gate approval
-3. **Team-Based**: Each project selects its agent team at kickoff — mandatory core + optional specialists
-4. **Backlog-Driven**: All work tracked as markdown task files in `backlog/` directory, git-versioned
-5. **Security Veto**: Agent 08 (Security Architect) retains veto power at any phase
-6. **Backward Compatible**: Existing Prompts A-D continue to work unchanged
+2. **PRD Before Spec**: A Product Requirements Document anchors the project on a real user problem and one core feature BEFORE technical specs begin (Gate G0a)
+3. **Canonical-First**: Each cross-cutting concern has ONE canonical implementation declared in `CANONICAL.md`. Alternatives require an ADR.
+4. **Phase-Gated**: 8 phases (0-7) with explicit gates; no phase proceeds without gate approval
+5. **Team-Based**: Each project selects its agent team at kickoff — mandatory core + optional specialists
+6. **Backlog-Driven**: All work tracked as markdown task files in `backlog/` directory, git-versioned
+7. **Security Veto**: Agent 08 (Security Architect) retains veto power at any phase
+8. **Structural Veto**: Agent 34 (Structural Coherence) holds veto on sprint close (Gate G3.5)
+9. **Backward Compatible**: Existing Prompts A-D continue to work unchanged
 
 ---
 
-## Agent Registry (34 Agents: 00-33)
+## Agent Registry (35 Agents: 00-34)
 
 ### CAPA META — Orchestration & Management
 
@@ -28,6 +40,7 @@ VANTAGE merges the Multi-Agent Framework (25 agents, 7 phases, security gates) w
 | 25 | Innovation Scout | Market Intelligence | Gartner MQ analysis, vendor comparison, competitive intel |
 | 26 | Product Owner | Product Manager | Backlog ownership, story acceptance, priority (MoSCoW), ROI |
 | 28 | Backlog Manager | Scrum Master | Sprint planning, backlog grooming, velocity, ceremonies, DoD enforcement |
+| 34 | Structural Coherence | Anti-Drift Auditor | **VETO POWER on Gate G3.5**, owns CANONICAL.md, blocks sprint close on duplication, dead code, doc-vs-reality drift, or canonical bypass |
 
 ### CAPA 0 — Governance & Discovery
 
@@ -114,31 +127,47 @@ VANTAGE merges the Multi-Agent Framework (25 agents, 7 phases, security gates) w
 
 ### Phase 1: DISCOVERY & SPECS
 
-**Purpose**: Elicit requirements, map compliance, produce formal specifications.
+**Purpose**: Define the product (PRD), elicit requirements, map compliance, produce formal specifications, populate the canonical implementations registry.
 
 **Activities**:
-1. Requirements Architect (02) elicits FR/NFR, acceptance criteria
-2. Compliance (03) maps regulatory requirements
-3. UX Researcher (32) produces personas and journey maps (if on team)
-4. **Spec Writer (27) produces ALL specifications** (see Spec Types below)
-5. Product Owner (26) breaks specs into epics → stories → tasks in backlog
-6. Architecture Board (01) reviews spec completeness
+1. **Product Owner (26) + Requirements Architect (02) produce the PRD** (`specs/prd.md`) — problem, user stories, ONE core feature, non-goals, success metrics. Approved BEFORE technical specs begin.
+2. Requirements Architect (02) elicits FR/NFR and acceptance criteria, derived from the PRD
+3. Compliance (03) maps regulatory requirements
+4. UX Researcher (32) produces personas and journey maps (if on team)
+5. **Spec Writer (27) produces ALL technical specifications** (see Spec Types below) — only after PRD approval
+6. **Architecture Board (01) populates `CANONICAL.md`** with the canonical implementation path for every cross-cutting concern (auth, errors, logging, validation, DB access, config, secrets, feature flags, etc.). Paths can be `(to be created at <path>)` if Phase 4 has not started.
+7. Product Owner (26) breaks PRD core feature + specs into epics → stories → tasks in backlog
+8. Architecture Board (01) reviews spec completeness
 
-**Gate G0**: All specs approved, backlog populated with stories, compliance matrix complete.
+**Gate G0a — PRD Approval (v1.5+)**: PRD signed off by Product Owner (26), Requirements Architect (02), and at least one persona-validating stakeholder. Status moves Draft → Approved → Locked. NO technical spec is started before this gate.
+
+**Gate G0**: All technical specs approved, `CANONICAL.md` populated, backlog populated with stories, compliance matrix complete.
+
+**PRD-first rationale**: The PRD is VANTAGE's first line of defense against structural drift. It prevents three failure modes:
+
+1. **Interesting-code drift**: Without a PRD, technical specs are written against the most fun problem in the room, not the one users have. Six months later the codebase has three half-built capabilities and zero shipped value.
+2. **Feature sprawl**: A PRD locks the project to ONE core feature. Every later "while we're at it" addition must either fit that feature or trigger a new PRD. This is the structural counterpart to CANONICAL.md: PRD constrains WHAT is built, CANONICAL.md constrains HOW it is built.
+3. **Cold-session amnesia**: Each AI coding session starts without memory of why decisions were made. The PRD is the durable memory the agent reads before touching code (see "Forced-Context Preamble" in Phase 4).
+
+If a PRD requires a 4th user story, the project is a platform not a product — split it into multiple PRDs.
 
 **Spec Types Produced**:
 
-| Spec | Format | File |
-|------|--------|------|
-| API Specification | OpenAPI 3.1 YAML | `specs/openapi.yaml` |
-| WebSocket Events | AsyncAPI / JSON | `specs/ws-events.json` |
-| Database Schema | SQL + ERD (Mermaid) | `specs/db-schema.sql`, `specs/erd.md` |
-| Domain Model | Mermaid class diagram | `specs/domain-model.md` |
-| UI Wireframes | Markdown + Mermaid | `specs/wireframes.md` |
-| UI Component Spec | Markdown | `specs/ui-components.md` |
-| State Machines | Mermaid stateDiagram | `specs/state-machines.md` |
-| Environment Config | YAML template | `specs/env-template.yaml` |
-| Test Plan | Markdown | `specs/test-plan.md` |
+| Spec | Format | File | Order |
+|------|--------|------|-------|
+| **Product Requirements Document** | Markdown | `specs/prd.md` | **0 (must be first, locked at G0a)** |
+| **Canonical Implementations Registry** | Markdown | `CANONICAL.md` (project root) | **0.5 (after PRD lock, before any technical spec)** |
+| API Specification | OpenAPI 3.1 YAML | `specs/openapi.yaml` | 1 |
+| WebSocket Events | AsyncAPI / JSON | `specs/ws-events.json` | 1 |
+| Database Schema | SQL + ERD (Mermaid) | `specs/db-schema.sql`, `specs/erd.md` | 1 |
+| Domain Model | Mermaid class diagram | `specs/domain-model.md` | 1 |
+| UI Wireframes | Markdown + Mermaid | `specs/wireframes.md` | 1 |
+| UI Component Spec | Markdown | `specs/ui-components.md` | 1 |
+| State Machines | Mermaid stateDiagram | `specs/state-machines.md` | 1 |
+| Environment Config | YAML template | `specs/env-template.yaml` | 1 |
+| Test Plan | Markdown | `specs/test-plan.md` | 1 |
+
+`CANONICAL.md` is owned by Architecture Board (01) and enforced by Structural Coherence (34). Template at `docs/CANONICAL-TEMPLATE.md`. PRs that introduce alternative implementations of any listed concern require an ADR; otherwise Agent 34 blocks the sprint close at Gate G3.5.
 
 ---
 
@@ -173,7 +202,7 @@ VANTAGE merges the Multi-Agent Framework (25 agents, 7 phases, security gates) w
 
 ### Phase 4: IMPLEMENTATION (Sprint-Driven)
 
-**Purpose**: Build the system in sprints, validated against specs.
+**Purpose**: Build the system in sprints, validated against specs and canonical implementations.
 
 **Sprint Structure** (managed by Backlog Manager 28):
 1. Sprint Planning: Pull stories from backlog, assign to agents
@@ -183,7 +212,30 @@ VANTAGE merges the Multi-Agent Framework (25 agents, 7 phases, security gates) w
 
 **Validation Rule**: Every implemented endpoint/component MUST reference its spec. Code that doesn't match specs is rejected.
 
+**Forced-Context Preamble (v2.0 Pillar B)**: Before any code-writing agent (12-16) writes a single line, it MUST execute the following preamble in order. This is non-negotiable and enforced by Orchestrator (00):
+
+1. Read `specs/prd.md` — confirm the change serves the locked core feature
+2. Read `CANONICAL.md` — find which canonical implementation handles this concern
+3. Read the last 5 ADRs in `backlog/decisions/` — surface recent architectural commitments
+4. Search the codebase for the capability being added: "does this already exist somewhere?"
+   - If YES: edit the existing implementation, do not create a parallel one
+   - If NO: document in the commit body why the new artifact is needed
+
+Each commit produced by a code-writing agent must include the line `Preamble executed: yes` (or `Preamble executed: skipped — <reason>` for trivial bypass like comment typos). Agent 34 audits this marker at sprint close.
+
+**Rationale**: The "vibe-coded codebase becomes unreadable in 6 months" failure mode is caused by cold-session amnesia. The preamble forces the model to re-load architectural memory before every write. It costs ~30-60 seconds per task and prevents the multi-week refactors that result from skipping it.
+
 **Gate G3**: Code review (19) passes, all implemented items match specs.
+
+**Gate G3.5 — Structural Coherence (v2.0 Pillar B)**: Before the sprint can close, Structural Coherence Agent (34) runs the structural drift report and BLOCKS sprint closure if any of the following are true:
+
+- Duplicate code detector reports >5% new duplication versus the previous sprint baseline
+- Any new file implements a concern already covered by a `CANONICAL.md` entry without an accompanying ADR
+- Dead code detector flags orphaned exports or unreachable modules introduced in this sprint
+- `ARCHITECTURE.md` was not updated when a new module, layer, or boundary was added
+- `CANONICAL.md` was not updated when a new cross-cutting concern was introduced
+
+Agent 34 has VETO POWER on sprint closure. Architecture Board (01) is the only escalation path; Architecture Board can override only by approving an ADR that explicitly accepts the drift cost and adds the alternative path to `CANONICAL.md`'s Divergence Log.
 
 ---
 
@@ -237,8 +289,20 @@ VANTAGE merges the Multi-Agent Framework (25 agents, 7 phases, security gates) w
 | Backlog grooming | 28 - Backlog Manager | Weekly |
 | Sprint ceremonies | 28 - Backlog Manager | Per sprint cycle |
 | Security monitoring | 08 - Security Architect | Continuous (veto anytime) |
+| Structural drift monitoring | 34 - Structural Coherence | Per PR (advisory) + per sprint close (G3.5 blocking) |
 | Spec evolution | 27 - Spec Writer | As requirements change |
 | Innovation watch | 25 - Innovation Scout | Monthly |
+| **Consolidation Sprint** | **34 - Structural Coherence + 19 - Code Review** | **1 of every 4 sprints** |
+
+**Consolidation Sprint (v2.0 Pillar B)**: Every 4th sprint is dedicated to consolidation, NOT new features. Hard rule enforced by Backlog Manager (28). During a Consolidation Sprint:
+
+1. Agent 34 produces a structural drift report aggregating findings from the trailing 3 sprints
+2. The team collapses duplicate implementations into the canonical paths declared in `CANONICAL.md`
+3. Dead code is deleted (no "keep just in case" — git history is the archive)
+4. `ARCHITECTURE.md` and `CANONICAL.md` are reconciled with the actual codebase
+5. The PRD is reviewed for drift: are we still building the locked core feature, or did 4 sprints of "while we're at it" mutate the product? If mutated → trigger PRD change request, do not paper over.
+
+Skipping a Consolidation Sprint requires Architecture Board (01) sign-off and creates an ADR documenting the technical debt incurred. Skipping two consecutive Consolidation Sprints is a structural emergency.
 
 ---
 
@@ -424,17 +488,18 @@ Assess current state, initialize backlog, and generate specs for what exists.
 
 ---
 
-## VANTAGE v2.0 — Intelligent Runtime
+## VANTAGE v2.0 — Pillar A: Intelligent Runtime
 
-VANTAGE v2.0 transforms the framework from static prompts into an intelligent runtime with:
+Pillar A transforms the framework from static prompts into an intelligent runtime:
 
 ### Key Additions
 - **Agent Memory**: Session + persistent memory with graduation rules and automatic compaction
-- **Subagent Dispatch**: Main agents (00, 08, 24) stay in context; all others dispatched as subagents (~75% token reduction)
+- **Subagent Dispatch**: Main agents (00, 08, 24, 34) stay in context; all others dispatched as subagents (~75% token reduction)
 - **Adaptive Toolkits**: Two-level loading — lightweight index (~200 tokens) always loaded + on-demand full definitions (~500 tokens)
 - **OSS Scout**: Proactive during Discovery, reactive during Implementation, with evaluation cache
 - **Token Estimator**: Per-phase breakdown with single approval gate before project starts
 - **Maintenance Agent**: Audits tracked packages and toolkits for staleness, vulnerabilities, and missing definitions
+- **Drift Detector** (`drift-detector.js`): Detects spec→implementation alignment drift (missing spec refs, orphaned specs, scope creep, naming drift) — runs on task completion
 - **6 Phase Skills**: Discovery → Architecture → Security → Implementation → QA → Operations
 
 ### Phase Mapping (v1.0 → v2.0)
@@ -457,3 +522,74 @@ npx vantage init
 
 ### Full Spec
 See `docs/superpowers/specs/2026-03-14-vantage-v2-idea-to-mvp-design.md`
+
+---
+
+## VANTAGE v2.0 — Pillar B: Structural Defense
+
+Pillar B exists because spec-driven development (v1.0) and intelligent runtime (Pillar A) do not prevent the "vibe-coded codebase that works but is unreadable in 6 months" failure mode. Spec-driven prevents the WRONG product from being built. Pillar A makes building it efficient. Pillar B prevents the right product from being built in three incompatible ways.
+
+### Three failure modes Pillar B targets
+
+1. **Cold-session amnesia**: Each session forgets prior architectural commitments and adds parallel implementations
+2. **Feature-driven drift**: PRs optimize for shipping the next feature, never for collapsing the resulting duplication
+3. **Doc-vs-reality gap**: ARCHITECTURE.md describes the codebase as it was 4 sprints ago; new contributors can't navigate it
+
+### The four mechanisms (each is mandatory)
+
+#### 1. Agent 34 — Structural Coherence (META layer, VETO POWER on Gate G3.5)
+
+Anti-drift auditor. Owns `CANONICAL.md`. Three operating modes:
+
+- **Mode A — Per-PR advisory** (non-blocking): comment on PRs with findings categorized [BLOCKER], [WARNING], [INFO]
+- **Mode B — Sprint close audit** (blocking, Gate G3.5): produces a drift report at `.vantage/memory/drift-reports/structural-sprint-NNN.md` with PASS/FAIL verdict
+- **Mode C — Consolidation Sprint driver** (every 4th sprint): leads remediation, prioritizes consolidation backlog
+
+Tooling baseline: jscpd / pmd-cpd (duplication), ts-prune / vulture (dead code), madge / dependency-cruiser (import graph), ast-grep / semgrep (structural patterns). The runtime module `.vantage/runtime/structural-coherence.js` contains the logic; tools are invoked from CI (see `.vantage/runtime/__tests__/structural-coherence.test.js` for unit tests of the pure logic).
+
+Override path: Architecture Board (01) ADR. The ADR must explicitly accept the drift cost and add the alternative path to `CANONICAL.md`'s Divergence Log. There is no other override.
+
+Agent prompt: `agents/34-structural-coherence.md`.
+
+#### 2. CANONICAL.md (project root, mandatory artifact from Phase 1)
+
+Single source of truth for cross-cutting implementations. Required template at `docs/CANONICAL-TEMPLATE.md`.
+
+Each row declares: concern, canonical path, owner agent, notes. Adding an alternative requires an ADR. Renames/moves of canonical paths are reflected in the same commit that performs the rename. CI fails if a row points to a non-existent file.
+
+Default concerns: Authentication, Authorization, HTTP Client, HTTP Server, Error Types, Error Handling Middleware, Logging, Validation, DB Access, DB Migrations, Config Loader, Secrets Access, Feature Flags, Background Jobs, Cache, Metrics, Frontend State, Frontend HTTP, Frontend Routing, i18n. Domain-specific concerns (payments, file storage, ML invocation, websocket routing, etc.) get added rows.
+
+#### 3. Forced-Context Preamble (Phase 4 rule)
+
+Every code-writing agent (12-16) reads `specs/prd.md` + `CANONICAL.md` + last 5 ADRs + does a "does this exist?" search before any write. Commit body marker `Preamble executed: yes` is audited at sprint close. See Phase 4 above for the full sequence.
+
+#### 4. Consolidation Sprint (1 of every 4)
+
+Hard cadence enforced by Backlog Manager (28). Dedicated to collapsing duplication, deleting dead code, reconciling docs, and reviewing PRD drift. See "Continuous Activities" above for the full activity list.
+
+### Pillar B Quick-Start Checklist
+
+For any new VANTAGE 2.0 project, verify before Phase 4 starts:
+
+- [ ] `specs/prd.md` exists, status = Locked, signed by 26 + 02 + persona stakeholder (Gate G0a)
+- [ ] `CANONICAL.md` exists at project root with at least Auth, HTTP, Errors, Logging, Validation, DB, Config rows populated
+- [ ] `ARCHITECTURE.md` exists at project root with current C4 + import graph
+- [ ] Agent 34 is on the active team (mandatory core for v2.0)
+- [ ] CI runs duplication and dead-code detectors on every PR; Agent 34 reads the reports
+- [ ] `backlog/decisions/` exists; ADR template is in place at `docs/DECISIONS-TEMPLATE.md`
+- [ ] Sprints 4, 8, 12... are pre-marked as Consolidation Sprints in `backlog/sprints/`
+
+### Compatibility
+
+- **v1.0 projects**: continue unchanged. No retrofit required.
+- **v2.0 Pillar-A projects**: can adopt Pillar B incrementally:
+  1. Add `specs/prd.md` reverse-engineered from current product reality
+  2. Add `CANONICAL.md` (initial population from import-graph clustering)
+  3. Activate forced-context preamble for new code (existing code grandfathered)
+  4. Run Agent 34 in Mode A (advisory) for one sprint to baseline drift metrics
+  5. Promote Agent 34 to Mode B (blocking at G3.5)
+  6. Schedule the first Consolidation Sprint
+- **v2.0 Full projects** (Pillar A + B): all four mechanisms required from Phase 1.
+
+### Full Spec
+See `docs/superpowers/specs/2026-05-03-vantage-v2-pillar-b-structural-defense.md`.
