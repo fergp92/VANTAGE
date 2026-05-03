@@ -187,6 +187,33 @@ VANTAGE merges the Multi-Agent Framework (25 agents, 7 phases, security gates) w
 
 ---
 
+### Dev-QA Loop (Within Phase 4)
+
+Every implementation task follows a build-test loop with a hard retry cap to prevent infinite rework:
+
+```
+Task Assigned -> Agent Builds (12-16) -> QA Reviews (17-20) -> PASS/FAIL
+                                                                  |
+                                                          PASS -> Task Complete
+                                                          FAIL -> Retry (max 3)
+                                                                  |
+                                                          3 FAILs -> ESCALATE
+```
+
+**Rules:**
+1. Retry counter is per-task, tracked in backlog item metadata (`retries: 0|1|2|3`)
+2. QA feedback on each FAIL must be specific and actionable -- no vague "needs work"
+3. On FAIL: QA agent returns the task to the implementing agent with concrete feedback
+4. On ESCALATE (3 failures): Architecture Board (01) decides:
+   - **Reassign** to a different implementing agent
+   - **Redesign** the approach (return to spec)
+   - **Descope** from current sprint (move to backlog)
+   - **Block** as needing human input
+5. Architecture Board has 24h to respond to escalations
+6. Escalation does NOT reset the retry counter
+7. This loop applies in all deployment modes except MICRO (which skips formal QA loop)
+
+
 ### Phase 5: QUALITY ASSURANCE
 
 **Purpose**: Comprehensive testing and security scanning.
