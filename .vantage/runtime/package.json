@@ -4,6 +4,6 @@
   "type": "module",
   "description": "VANTAGE v2.0 runtime — memory, toolkits, scout, estimation",
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.2.0"
   }
 }
