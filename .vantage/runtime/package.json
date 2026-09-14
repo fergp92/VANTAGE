@@ -1,6 +1,7 @@
 {
   "name": "vantage-runtime",
   "version": "2.0.0",
+  "packageManager": "pnpm@11.1.2",
   "type": "module",
   "description": "VANTAGE v2.0 runtime — memory, toolkits, scout, estimation",
   "dependencies": {

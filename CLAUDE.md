@@ -39,7 +39,7 @@ The runtime lives in `.vantage/runtime/` and uses Node.js ES modules with `js-ya
 ### Running Tests
 
 ```bash
-cd .vantage/runtime && npm install
+cd .vantage/runtime && pnpm install --frozen-lockfile
 node --test __tests__/*.test.js
 ```
 

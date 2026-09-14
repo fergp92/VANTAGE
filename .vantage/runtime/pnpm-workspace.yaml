@@ -1,0 +1,3 @@
+# pnpm 11+ per-repo config
+minimumReleaseAge: 1440
+autoInstallPeers: true
